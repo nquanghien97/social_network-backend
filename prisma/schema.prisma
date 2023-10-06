@@ -1,0 +1,66 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id          Int       @id @default(autoincrement())
+  email       String   @db.VarChar(255) @unique
+  password    String   @db.VarChar(255)
+  fullName    String?   @db.VarChar(255)
+  location    String?   @db.VarChar(255)
+  avatar      String?   @db.VarChar(255)
+  description String?   @db.VarChar(255)
+  createdAt   DateTime @default(now()) @db.Timestamp(0)
+  updatedAt   DateTime @updatedAt @db.Timestamp(0)
+  posts Post[]
+  followers Follows[] @relation("following")
+  following Follows[] @relation("follower")
+  comments Comments[]
+  userToken RefreshToken[]
+}
+
+model Post {
+  id Int @id @default(autoincrement())
+  title String? @db.VarChar(255)
+  text String? @db.VarChar(255)
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  comments Comments[]
+}
+
+model Follows {
+  follower    User @relation("follower", fields: [followerId], references: [id])
+  followerId  Int
+  following   User @relation("following", fields: [followingId], references: [id])
+  followingId Int
+
+  @@id([followerId, followingId])
+}
+
+model Comments {
+  id Int @id @default(autoincrement())
+  content String? @db.VarChar(255)
+  createdAt DateTime @default(now())
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+  post Post @relation(fields: [postId], references: [id])
+  postId Int
+  parentComment Comments? @relation("CommentToComment", fields: [parentCommentId], references: [id])
+  parentCommentId Int?
+  childComments Comments[] @relation("CommentToComment")
+}
+
+model RefreshToken {
+  id String @id  @unique @default(uuid())
+  hashedToken String @db.VarChar(255)
+  revoked Boolean  @default(false)
+  createdAt DateTime @default(now())
+  updatedAt  DateTime  @updatedAt
+  user User @relation(fields: [userId], references: [id])
+  userId Int
+}
