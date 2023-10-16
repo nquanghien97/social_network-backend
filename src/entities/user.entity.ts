@@ -3,8 +3,8 @@ export default interface UserEntity {
   email: string;
   password: string;
   fullName?: string | null;
-  location?: string | null;  
-  avatar?: string | null;     
+  location?: string | null;
+  avatar?: string | null;
   description?: string | null;
   createdAt: Date;
   updatedAt: Date;

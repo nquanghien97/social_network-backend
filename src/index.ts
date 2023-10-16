@@ -6,6 +6,7 @@ import cors from 'cors';
 
 import authRouter from './router/auth.router';
 
+const port = 5000;
 const app = express();
 
 dotenv.config();
@@ -27,6 +28,6 @@ connection.connect(function(err) {
     console.log("Connected!");
 });
 
-app.listen(3000, function(){
-    console.log('App Listening on port 3000');
+app.listen(port, function(){
+    console.log(`App Listening on port ${port}`);
 });
