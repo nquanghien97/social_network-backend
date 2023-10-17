@@ -1,12 +1,15 @@
 import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
+import jwt, { JwtPayload } from 'jsonwebtoken';
 import { generateTokens } from '../utils/jwt';
-import { addRefreshTokenToWhitelist } from '../services/auth.services';
+import { addRefreshTokenToWhitelist, deleteRefreshToken, findRefreshTokenById } from '../services/auth.services';
 import {
   findUserByEmail,
   createUserByEmailAndPassword,
+  findUserById,
 } from '../services/user.services';
+import { hashToken } from '../utils/hashToken';
 
 const router = Router();
 
@@ -87,6 +90,53 @@ router.post('/login', async (req, res, next) => {
         refreshToken,
         user: existingUser
       }
+    });
+  } catch (err) {
+    next(err);
+  }
+});
+
+
+// refresh token
+interface payloadJwt extends JwtPayload {
+  jti: string;
+}
+
+router.post('/refreshToken', async (req, res, next) => {
+  try {
+    const { refreshToken } = req.body;
+    if (!refreshToken) {
+      res.status(400);
+      throw new Error('Missing refresh token.');
+    }
+    const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_PRIVATE_KEY as string) as payloadJwt;
+    const savedRefreshToken = await findRefreshTokenById(payload.jwtId);
+
+    if (!savedRefreshToken || savedRefreshToken.revoked === true) {
+      res.status(401);
+      throw new Error('Unauthorized');
+    }
+
+    const hashedToken = hashToken(refreshToken);
+    if (hashedToken !== savedRefreshToken.hashedToken) {
+      res.status(401);
+      throw new Error('Unauthorized');
+    }
+
+    const user = await findUserById(payload.userId);
+    if (!user) {
+      res.status(401);
+      throw new Error('Unauthorized');
+    }
+
+    await deleteRefreshToken(savedRefreshToken.id);
+    const jti = uuidv4();
+    const { accessToken, refreshToken: newRefreshToken } = generateTokens(user, jti);
+    await addRefreshTokenToWhitelist({ jti, refreshToken: newRefreshToken, userId: user.id });
+
+    res.json({
+      accessToken,
+      refreshToken: newRefreshToken
     });
   } catch (err) {
     next(err);

@@ -5,6 +5,7 @@ import * as dotenv from 'dotenv';
 import cors from 'cors';
 
 import authRouter from './router/auth.router';
+import userRouter from './router/user.router';
 
 const port = 5000;
 const app = express();
@@ -15,6 +16,8 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 
 app.use('/api/auth', authRouter)
+
+app.use('/api', userRouter);
 
 const connection = mysql.createConnection({
     host: 'localhost',
