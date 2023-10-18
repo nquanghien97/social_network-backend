@@ -6,7 +6,11 @@ interface AuthJwt extends JwtPayload {
 }
 
 export default function verifyToken(req: any, res: Response, next: NextFunction) {
-	const authHeader = req.header('Authorization')
+	const authHeader = req.header('Authorization');
+	if(!authHeader) {
+		res.json(401);
+		throw new Error('UnAuthorized');
+	}
 	const token = authHeader && authHeader.split(' ')[1]
 
 	if (!token)
@@ -15,12 +19,14 @@ export default function verifyToken(req: any, res: Response, next: NextFunction)
 			.json({ success: false, message: 'Access token not found' })
 
 	try {
-		const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_PRIVATE_KEY as string) as AuthJwt
+		const payload = jwt.verify(token, process.env.ACCESS_TOKEN_PRIVATE_KEY as string) as AuthJwt
 
-		req.userId = decoded.userId
+		req.userId = payload.userId
 		next()
 	} catch (error) {
 		console.log(error)
-		return res.status(403).json({ success: false, message: 'Invalid token' })
+		return res
+			.status(403)
+			.json({ success: false, message: 'Invalid token' })
 	}
 }

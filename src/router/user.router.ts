@@ -16,10 +16,19 @@ router.post('/user',verifyToken, async (req: any, res: Response, next: NextFunct
       success: false,
       message: "Unauthorized"
     })
-    res.status(400).json({
+    res.status(200).json({
       success: true,
       message: "Get User Success",
-      user: user
+      user: {
+        id: user.id,
+        email: user.email,
+        fullName: user.fullName,
+        location: user.location,
+        avatar: user.avatar,
+        description: user.description,
+        createdAt: user.createdAt,
+        updatedAt: user.updatedAt
+      }
     })
   } catch (err: any) {
     res.status(500).json({
