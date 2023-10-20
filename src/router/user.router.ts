@@ -26,6 +26,7 @@ router.get('/user',verifyToken, async (req: any, res: Response) => {
         location: user.location,
         avatar: user.avatar,
         description: user.description,
+        job: user.job,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
       }
@@ -41,13 +42,13 @@ router.get('/user',verifyToken, async (req: any, res: Response) => {
 
 router.post('/update-user', verifyToken, async (req: any, res: Response) => {
   const userId = req.userId;
-  const { fullName, location, description } = req.body;
+  const { fullName, location, description, job } = req.body;
   if(!userId) return res.status(401).json({
     success: false,
     message: "Unauthorized"
   })
   try {
-    const updateUser = await updateUserById(userId, { fullName, location, description })
+    const updateUser = await updateUserById(userId, { fullName, location, description, job })
     return res.status(200).json({
       success: true,
       message: 'Update User Successfully',
@@ -56,7 +57,7 @@ router.post('/update-user', verifyToken, async (req: any, res: Response) => {
   } catch (err: any) {
     res.status(500).json({
       success: false,
-      message: "User does not exist",
+      message: "Update User Error",
       error: err.message,
     })
   }

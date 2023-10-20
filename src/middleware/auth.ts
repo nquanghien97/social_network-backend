@@ -8,7 +8,7 @@ interface AuthJwt extends JwtPayload {
 export default function verifyToken(req: any, res: Response, next: NextFunction) {
 	const authHeader = req.header('Authorization');
 	if(!authHeader) {
-		res.json(401).json({
+		res.status(401).json({
 			success: false,
 			message: 'UnAuthorized'
 		})

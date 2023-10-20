@@ -6,6 +6,7 @@ export default interface UserEntity {
   location?: string | null;
   avatar?: string | null;
   description?: string | null;
+  job?: string | null;
   createdAt: Date;
   updatedAt: Date;
 }
