@@ -1,10 +1,10 @@
 import { Router, Response, NextFunction, Request } from 'express';
-import { findUserById } from '../services/user.services';
+import { findUserById, updateUserById } from '../services/user.services';
 import verifyToken from '../middleware/auth';
 
 const router = Router();
 
-router.post('/user',verifyToken, async (req: any, res: Response, next: NextFunction) => {
+router.get('/user',verifyToken, async (req: any, res: Response) => {
   const userId = req.userId;
   if(!userId) return res.status(401).json({
     success: false,
@@ -39,4 +39,27 @@ router.post('/user',verifyToken, async (req: any, res: Response, next: NextFunct
   }
 })
 
+router.post('/update-user', verifyToken, async (req: any, res: Response) => {
+  const userId = req.userId;
+  const { fullName, location, description } = req.body;
+  if(!userId) return res.status(401).json({
+    success: false,
+    message: "Unauthorized"
+  })
+  try {
+    const updateUser = await updateUserById(userId, { fullName, location, description })
+    return res.status(200).json({
+      success: true,
+      message: 'Update User Successfully',
+      user: updateUser
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: "User does not exist",
+      error: err.message,
+    })
+  }
+})
+                      
 export default router

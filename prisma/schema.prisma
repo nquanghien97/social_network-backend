@@ -62,9 +62,9 @@ model Comments {
   userId Int
   post Post @relation(fields: [postId], references: [id])
   postId Int
-  parentComment Comments? @relation("CommentToComment", fields: [parentCommentId], references: [id])
-  parentCommentId Int?
-  childComments Comments[] @relation("CommentToComment")
+  parent Comments? @relation("ParentChild", fields: [parentId], references: [id])
+  parentId Int?
+  children Comments[] @relation("ParentChild")
 }
 
 model RefreshToken {

@@ -64,7 +64,7 @@ router.post('/login', async (req, res, next) => {
     const existingUser = await findUserByEmail(email);
 
     if (!existingUser) {
-      return res.status(403).json({
+      return res.status(401).json({
         success: false,
         message: "Tài khoản không tồn tại",
       })
@@ -72,7 +72,7 @@ router.post('/login', async (req, res, next) => {
 
     const validPassword = await bcrypt.compare(password, existingUser.password);
     if (!validPassword) {
-      res.status(403).json({
+      res.status(401).json({
         success: false,
         message: "Email hoặc mật khẩu không chính xác",
       })
@@ -106,27 +106,35 @@ router.post('/refreshToken', async (req, res, next) => {
   try {
     const { refreshToken } = req.body;
     if (!refreshToken) {
-      res.status(400);
-      throw new Error('Missing refresh token.');
+      res.status(400).json({
+        success: false,
+        message: 'Unauthorized'
+      });
     }
     const payload = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_PRIVATE_KEY as string) as payloadJwt;
     const savedRefreshToken = await findRefreshTokenById(payload.jwtId);
 
-    if (!savedRefreshToken || savedRefreshToken.revoked === true) {
-      res.status(401);
-      throw new Error('Unauthorized');
+    if (!savedRefreshToken) {
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized'
+      });
     }
 
     const hashedToken = hashToken(refreshToken);
     if (hashedToken !== savedRefreshToken.hashedToken) {
-      res.status(401);
-      throw new Error('Unauthorized');
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized'
+      });
     }
 
     const user = await findUserById(payload.userId);
     if (!user) {
-      res.status(401);
-      throw new Error('Unauthorized');
+      return res.status(401).json({
+        success: false,
+        message: 'Unauthorized'
+      });
     }
 
     await deleteRefreshToken(savedRefreshToken.id);

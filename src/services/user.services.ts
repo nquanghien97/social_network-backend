@@ -1,4 +1,4 @@
-import { createUserDTO } from "../dto/user.dto";
+import { createUserDTO, updateUserDTO } from "../dto/user.dto";
 import UserEntity from "../entities/user.entity";
 
 import bcrypt from 'bcrypt';
@@ -28,8 +28,19 @@ function findUserById(id: number) {
   });
 }
 
+const updateUserById = async (id: number, data: updateUserDTO) => {
+  const updateUser = await db.user.update({
+    where: {
+      id,
+    },
+    data: data
+  })
+  return updateUser;
+}
+
 export {
   findUserByEmail,
   findUserById,
-  createUserByEmailAndPassword
+  createUserByEmailAndPassword,
+  updateUserById
 };

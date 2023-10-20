@@ -11,7 +11,7 @@ function generateRefreshToken(user: UserEntity, jwtId: string) {
     userId: user.id,
     jwtId
   }, process.env.REFRESH_TOKEN_PRIVATE_KEY as string, {
-    expiresIn: '8h',
+    expiresIn: '3 days',
   });
 }
 
