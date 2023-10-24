@@ -3,7 +3,10 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
 import { generateTokens } from '../utils/jwt';
-import { addRefreshTokenToWhitelist, deleteRefreshToken, findRefreshTokenById } from '../services/auth.services';
+import {
+  addRefreshTokenToWhitelist,
+  deleteRefreshToken, findRefreshTokenById
+} from '../services/auth.services';
 import {
   findUserByEmail,
   createUserByEmailAndPassword,
@@ -66,7 +69,7 @@ router.post('/login', async (req, res, next) => {
     if (!existingUser) {
       return res.status(401).json({
         success: false,
-        message: "Tài khoản không tồn tại",
+        message: "Email hoặc mật khẩu không chính xác",
       })
     }
 
