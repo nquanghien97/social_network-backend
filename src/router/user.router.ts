@@ -1,4 +1,4 @@
-import { Router, Response, NextFunction, Request } from 'express';
+import { Router, Response } from 'express';
 import { findUserById, updateUserById } from '../services/user.services';
 import verifyToken from '../middleware/auth';
 

@@ -8,42 +8,46 @@ datasource db {
 }
 
 model User {
-  id          Int       @id @default(autoincrement())
-  email       String    @db.VarChar(255) @unique
-  password    String    @db.VarChar(255)
-  fullName    String?   @db.VarChar(255)
-  location    String?   @db.VarChar(255)
-  avatar      String?   @db.VarChar(255)
-  job         String?   @db.VarChar(255)
-  description String?   @db.VarChar(255)
-  createdAt   DateTime @default(now()) @db.Timestamp(0)
-  updatedAt   DateTime @updatedAt @db.Timestamp(0)
-  posts Post[]
-  followers Follows[] @relation("following")
-  following Follows[] @relation("follower")
-  comments Comments[]
-  userToken RefreshToken[]
-  friends Friends[] @relation(name: "users")
-  friendUserFriends Friends[] @relation(name: "friend_users")
+  id                Int            @id @default(autoincrement())
+  email             String         @unique @db.VarChar(255)
+  password          String         @db.VarChar(255)
+  fullName          String?        @db.VarChar(255)
+  location          String?        @db.VarChar(255)
+  avatar            String?        @db.VarChar(255)
+  job               String?        @db.VarChar(255)
+  description       String?        @db.VarChar(255)
+  cloudinary_id     String?        @db.VarChar(255)
+  createdAt         DateTime       @default(now()) @db.Timestamp(0)
+  updatedAt         DateTime       @updatedAt @db.Timestamp(0)
+  posts             Post[]
+  followers         Follows[]      @relation("following")
+  following         Follows[]      @relation("follower")
+  comments          Comments[]
+  userToken         RefreshToken[]
+  friends           Friends[]      @relation(name: "users")
+  friendUserFriends Friends[]      @relation(name: "friend_users")
 }
 
 model Friends {
-  id Int @id @default(autoincrement())
-  userId Int
-  user User @relation(name: "users",fields: [userId], references: [id])
-  friendId Int
-  friend User @relation(name: "friend_users", fields: [friendId], references: [id])
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  user      User     @relation(name: "users", fields: [userId], references: [id])
+  friendId  Int
+  friend    User     @relation(name: "friend_users", fields: [friendId], references: [id])
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 }
 
 model Post {
-  id Int @id @default(autoincrement())
-  title String? @db.VarChar(255)
-  text String? @db.VarChar(255)
-  user User @relation(fields: [userId], references: [id])
-  userId Int
-  comments Comments[]
+  id        String     @id @unique @default(uuid())
+  title     String?    @db.VarChar(255)
+  text      String?    @db.VarChar(255)
+  imageUrl  String?    @db.VarChar(255)
+  user      User       @relation(fields: [userId], references: [id])
+  userId    Int
+  comments  Comments[]
+  createdAt DateTime   @default(now()) @db.Timestamp(0)
+  updatedAt DateTime   @updatedAt @db.Timestamp(0)
 }
 
 model Follows {
@@ -56,24 +60,24 @@ model Follows {
 }
 
 model Comments {
-  id Int @id @default(autoincrement())
-  content String? @db.VarChar(255)
-  createdAt DateTime @default(now())
-  user User @relation(fields: [userId], references: [id])
-  userId Int
-  post Post @relation(fields: [postId], references: [id])
-  postId Int
-  parent Comments? @relation("ParentChild", fields: [parentId], references: [id])
-  parentId Int?
-  children Comments[] @relation("ParentChild")
+  id        Int        @id @default(autoincrement())
+  content   String?    @db.VarChar(255)
+  createdAt DateTime   @default(now())
+  user      User       @relation(fields: [userId], references: [id])
+  userId    Int
+  post      Post       @relation(fields: [postId], references: [id])
+  postId    String
+  parent    Comments?  @relation("ParentChild", fields: [parentId], references: [id])
+  parentId  Int?
+  children  Comments[] @relation("ParentChild")
 }
 
 model RefreshToken {
-  id String @id  @unique @default(uuid())
-  hashedToken String @db.VarChar(255)
-  revoked Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt  DateTime  @updatedAt
-  user User @relation(fields: [userId], references: [id])
-  userId Int
+  id          String   @id @unique @default(uuid())
+  hashedToken String   @db.VarChar(255)
+  revoked     Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  user        User     @relation(fields: [userId], references: [id])
+  userId      Int
 }
