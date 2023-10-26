@@ -39,15 +39,16 @@ model Friends {
 }
 
 model Post {
-  id        String     @id @unique @default(uuid())
-  title     String?    @db.VarChar(255)
-  text      String?    @db.VarChar(255)
-  imageUrl  String?    @db.VarChar(255)
-  user      User       @relation(fields: [userId], references: [id])
-  userId    Int
-  comments  Comments[]
-  createdAt DateTime   @default(now()) @db.Timestamp(0)
-  updatedAt DateTime   @updatedAt @db.Timestamp(0)
+  id            String     @id @unique @default(uuid())
+  title         String?    @db.VarChar(255)
+  text          String?    @db.VarChar(255)
+  imageUrl      String?    @db.VarChar(255)
+  cloudinary_id String?    @db.VarChar(255)
+  user          User       @relation(fields: [userId], references: [id])
+  userId        Int
+  comments      Comments[]
+  createdAt     DateTime   @default(now()) @db.Timestamp(0)
+  updatedAt     DateTime   @updatedAt @db.Timestamp(0)
 }
 
 model Follows {

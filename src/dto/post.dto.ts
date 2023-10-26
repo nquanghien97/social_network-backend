@@ -3,4 +3,5 @@ export interface createPostDTO {
   title?: string;
   text?: string;
   imageUrl?: string;
+  cloudinary_id?: string;
 }

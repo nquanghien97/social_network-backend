@@ -14,3 +14,13 @@ export async function getAllPost(userId: number) {
     }
   })
 }
+
+export async function getNewFeed(userIds: number[]) {
+  return await db.post.findMany({
+    where: {
+      userId: {
+        in: userIds
+      }
+    }
+  })
+}
