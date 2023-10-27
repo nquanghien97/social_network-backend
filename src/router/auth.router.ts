@@ -18,7 +18,7 @@ const router = Router();
 
 router.post('/register', async (req, res, next) => {
   try {
-    const { email, password } = req.body;
+    const { fullName, email, password } = req.body;
     if (!email || !password) {
       res.status(400).json({
         success: false,
@@ -35,7 +35,7 @@ router.post('/register', async (req, res, next) => {
       });
     }
 
-    const user = await createUserByEmailAndPassword({ email, password });
+    const user = await createUserByEmailAndPassword({ fullName, email, password });
     const jti = uuidv4();
     const { accessToken, refreshToken } = generateTokens(user, jti);
     await addRefreshTokenToWhitelist({ jti, refreshToken, userId: user.id });
