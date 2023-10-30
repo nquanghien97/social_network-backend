@@ -13,6 +13,8 @@ export async function getAllFriends(userId: number) {
           id: true,
           fullName: true,
           email: true,
+          imageUrl: true,
+          job: true,
         },
       },
     },
