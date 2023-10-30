@@ -13,7 +13,7 @@ model User {
   password          String         @db.VarChar(255)
   fullName          String?        @db.VarChar(255)
   location          String?        @db.VarChar(255)
-  avatar            String?        @db.VarChar(255)
+  imageUrl          String?        @db.VarChar(255)
   job               String?        @db.VarChar(255)
   description       String?        @db.VarChar(255)
   cloudinary_id     String?        @db.VarChar(255)

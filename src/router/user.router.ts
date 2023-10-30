@@ -1,6 +1,8 @@
 import { Router, Response } from 'express';
 import { findUserById, updateUserById } from '../services/user.services';
 import verifyToken from '../middleware/auth';
+import multer from '../utils/multer';
+import cloudinary from '../utils/cloudinary';
 
 const router = Router();
 
@@ -24,7 +26,7 @@ router.get('/user',verifyToken, async (req: any, res: Response) => {
         email: user.email,
         fullName: user.fullName,
         location: user.location,
-        avatar: user.avatar,
+        imageUrl: user.imageUrl,
         description: user.description,
         job: user.job,
         createdAt: user.createdAt,
@@ -40,7 +42,7 @@ router.get('/user',verifyToken, async (req: any, res: Response) => {
   }
 })
 
-router.post('/update-user', verifyToken, async (req: any, res: Response) => {
+router.post('/update-user', multer.single('image'), verifyToken, async (req: any, res: Response) => {
   const userId = req.userId;
   const { fullName, location, description, job } = req.body;
   if(!userId) return res.status(401).json({
@@ -48,7 +50,21 @@ router.post('/update-user', verifyToken, async (req: any, res: Response) => {
     message: "Unauthorized"
   })
   try {
-    const updateUser = await updateUserById(userId, { fullName, location, description, job })
+    const result = await cloudinary.v2.uploader.upload(req.file.path, {
+      folder: "social-network/user",
+      use_filename: true,
+    });
+  
+    const updateUser = await updateUserById(
+      userId,
+      {
+        fullName,
+        location,
+        description,
+        job,
+        imageUrl: result.secure_url,
+        cloudinary_id: result.public_id
+      })
     return res.status(200).json({
       success: true,
       message: 'Update User Successfully',
