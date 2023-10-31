@@ -115,6 +115,33 @@ router.delete('/friend', verifyToken, async (req: any, res) => {
       error: err.message
     })
   }
+});
+
+router.get('/id-friend', verifyToken, async (req: any, res) => {
+  const userId = req.userId;
+  if(!userId) {
+    return res.status(401).json({
+      success: false,
+      message: "Unauthorized"
+    })
+  }
+  try {
+    const data = await getAllFriends(userId);
+    const listFriendsId = data.map(({friend}) => friend.id);
+
+    return res.status(200).json({
+      success: true,
+      message: "get Friends successfully",
+      listFriendsId
+    })
+  } catch (err: any){
+    res.status(400).json({
+      success: false,
+      message: "Failed to get friend",
+      error: err.message
+    })
+  }
 })
+
 
 export default router;

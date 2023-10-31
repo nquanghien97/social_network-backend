@@ -44,7 +44,7 @@ model Post {
   text          String?    @db.VarChar(255)
   imageUrl      String?    @db.VarChar(255)
   cloudinary_id String?    @db.VarChar(255)
-  user          User       @relation(fields: [userId], references: [id])
+  author          User       @relation(fields: [userId], references: [id])
   userId        Int
   comments      Comments[]
   createdAt     DateTime   @default(now()) @db.Timestamp(0)
@@ -64,7 +64,7 @@ model Comments {
   id        Int        @id @default(autoincrement())
   content   String?    @db.VarChar(255)
   createdAt DateTime   @default(now())
-  user      User       @relation(fields: [userId], references: [id])
+  author      User       @relation(fields: [userId], references: [id])
   userId    Int
   post      Post       @relation(fields: [postId], references: [id])
   postId    String

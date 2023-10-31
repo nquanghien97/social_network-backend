@@ -38,9 +38,25 @@ const updateUserById = async (id: number, data: updateUserDTO) => {
   return updateUser;
 }
 
+async function getUser(id: number) {
+  return await db.user.findMany({
+    where: {
+      id,
+    },
+    select: {
+      id: true,
+      fullName: true,
+      email: true,
+      imageUrl: true,
+      job: true,
+    },
+  });
+}
+
 export {
   findUserByEmail,
   findUserById,
   createUserByEmailAndPassword,
-  updateUserById
+  updateUserById,
+  getUser
 };
