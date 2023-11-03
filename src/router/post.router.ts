@@ -43,6 +43,7 @@ router.post('/post', multer.single('image'), verifyToken, async (req: any, res: 
   }
 })
 
+//get post
 router.get('/post', verifyToken, async (req: any, res: Response) => {
   const userId = req.userId;
   if(!userId) return res.status(401).json({
@@ -65,6 +66,7 @@ router.get('/post', verifyToken, async (req: any, res: Response) => {
   }
 });
 
+//get new feed
 router.post('/feed', verifyToken, async (req: any, res: Response) =>{
   const userId = req.userId
   const { listFriendsId } = req.body
