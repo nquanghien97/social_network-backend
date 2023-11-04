@@ -28,6 +28,7 @@ export async function getAllPost(userId: number) {
           imageUrl: true,
         }
       },
+      like: true,
     },
     orderBy: {
       updatedAt: 'desc'
@@ -57,6 +58,7 @@ export async function getNewFeed(userIds: number[]) {
           imageUrl: true,
         }
       },
+      like: true
     },
     orderBy: {
       updatedAt: 'desc'

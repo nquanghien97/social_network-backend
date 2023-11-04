@@ -7,6 +7,7 @@ import authRouter from './router/auth.router';
 import userRouter from './router/user.router';
 import postRouter from './router/post.router';
 import friendRouter from './router/friend.router';
+import likeRouter from './router/like.router';
 
 const port = 5000;
 const app = express();
@@ -21,6 +22,7 @@ app.use('/api/auth', authRouter)
 app.use('/api', userRouter);
 app.use('/api/', postRouter);
 app.use('/api/', friendRouter);
+app.use('/api/', likeRouter);
 
 const connection = mysql.createConnection({
     host: 'localhost',

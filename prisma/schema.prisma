@@ -26,7 +26,7 @@ model User {
   userToken         RefreshToken[]
   friends           Friends[]      @relation(name: "users")
   friendUserFriends Friends[]      @relation(name: "friend_users")
-  like_count        Like[]     
+  like      Like[]     
 }
 
 model Friends {
@@ -48,7 +48,7 @@ model Post {
   author          User       @relation(fields: [userId], references: [id])
   userId        Int
   comments      Comments[]
-  like_count    Like[]
+  like    Like[]
   createdAt     DateTime   @default(now()) @db.Timestamp(0)
   updatedAt     DateTime   @updatedAt @db.Timestamp(0)
 }
@@ -86,9 +86,10 @@ model RefreshToken {
 }
 
 model Like {
-  id          String  @id @unique @default(uuid())
+  id          String    @id @unique @default(uuid())
   userId      Int
-  author      User    @relation(fields: [userId], references: [id])
+  author      User      @relation(fields: [userId], references: [id])
   postId      String
-  post        Post    @relation(fields: [postId], references: [id])
+  post        Post      @relation(fields: [postId], references: [id])
+  createdAt   DateTime  @default(now())
 }
