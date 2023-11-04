@@ -72,3 +72,11 @@ export async function deletePost(postId: string, userId: number) {
     }
   })
 }
+
+export async function getPostById(postId: string) {
+  return await db.post.findUnique({
+    where: {
+      id: postId
+    }
+  })
+}
