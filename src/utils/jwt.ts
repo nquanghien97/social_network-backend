@@ -3,7 +3,7 @@ import UserEntity from "../entities/user.entity";
 
 function generateAccessToken(user: UserEntity) {
   return jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_PRIVATE_KEY as string, {
-    expiresIn: '5m',
+    expiresIn: '30m',
   });
 }
 function generateRefreshToken(user: UserEntity, jwtId: string) {
