@@ -67,9 +67,33 @@ export async function getComments(postId: string) {
           },
         },
         orderBy: {
-          createdAt: 'asc',
+          createdAt: 'desc',
         },
       },
     },
+  })
+}
+
+export async function findCommentById(commentId: string) {
+  return await db.comments.findUnique({
+    where: {
+      id: commentId,
+    },
+  })
+}
+
+export async function deleteComment(commentId: string) {
+  const childComments = await db.comments.findMany({
+    where: {
+      parentId: commentId
+    }
+  })
+  for (const childComment of childComments) {
+    await deleteComment(childComment.id);
+  }
+  await db.comments.delete({
+    where: {
+      id: commentId
+    }
   })
 }

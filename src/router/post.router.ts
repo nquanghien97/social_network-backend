@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import verifyToken from '../middleware/auth';
-import { createPost, deletePost, getAllPost, getNewFeed } from '../services/post.services';
+import { createPost, deletePost, getAllPost, getNewFeed, getPostById } from '../services/post.services';
 import cloudinary from '../utils/cloudinary';
 import { createPostDTO } from '../dto/post.dto';
 import multer from '../utils/multer';
@@ -44,7 +44,7 @@ router.post('/post', multer.single('image'), verifyToken, async (req: any, res: 
 })
 
 //get post
-router.get('/post', verifyToken, async (req: any, res: Response) => {
+router.get('/posts', verifyToken, async (req: any, res: Response) => {
   const userId = req.userId;
   if(!userId) return res.status(401).json({
     success: false,
@@ -52,6 +52,11 @@ router.get('/post', verifyToken, async (req: any, res: Response) => {
   })
   try {
     const data = await getAllPost(userId);
+    // let comments
+    // data.forEach((post) => {
+    //   comments = post.comments.filter(comment => comment === null)
+    //   post.comments = comments
+    // })
     return res.status(200).json({
       success: true,
       message: "Get post successfully",
@@ -65,6 +70,25 @@ router.get('/post', verifyToken, async (req: any, res: Response) => {
     })
   }
 });
+
+//get single post
+router.get('/post/:postId', verifyToken, async (req: any, res) => {
+  const { postId } = req.params;
+  try {
+    const post = await getPostById(postId)
+    return res.status(200).json({
+      success: true,
+      message: "Get post successfully",
+      post
+    })
+  } catch (err: any) {
+    return res.status(400).json({
+      success: false,
+      message: "Get Post Failed",
+      error: err.message
+    })
+  }
+})
 
 //get new feed
 router.post('/feed', verifyToken, async (req: any, res: Response) =>{

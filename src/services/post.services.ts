@@ -29,6 +29,22 @@ export async function getAllPost(userId: number) {
         }
       },
       like: true,
+      comments: {
+        take: 1,
+        include: {
+          author: {
+            select: {
+              id: true,
+              fullName: true,
+              imageUrl: true,
+            }
+          },
+
+        },
+        orderBy: {
+          updatedAt: 'desc'
+        }
+      }
     },
     orderBy: {
       updatedAt: 'desc'
@@ -58,13 +74,29 @@ export async function getNewFeed(userIds: number[]) {
           imageUrl: true,
         }
       },
-      like: true
+      like: true,
+      comments: {
+        take: 1,
+        include: {
+          author: {
+            select: {
+              id: true,
+              fullName: true,
+              imageUrl: true,
+            }
+          },
+
+        },
+        orderBy: {
+          updatedAt: 'desc'
+        }
+      }
     },
     orderBy: {
       updatedAt: 'desc'
     },
   })
-}
+};
 
 export async function deletePost(postId: string, userId: number) {
   return await db.post.delete({
@@ -79,6 +111,58 @@ export async function getPostById(postId: string) {
   return await db.post.findUnique({
     where: {
       id: postId
-    }
+    },
+    include: {
+      author: true,
+      like: true,
+      comments: {
+        include: {
+          author: {
+            select: {
+              id: true,
+              fullName: true,
+              imageUrl: true,
+            }
+          },
+          children: {
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  fullName: true,
+                  imageUrl: true,
+                }
+              },
+              children: {
+                include: {
+                  author: {
+                    select: {
+                      id: true,
+                      fullName: true,
+                      imageUrl: true,
+                    }
+                  },
+                  children: {
+                    include: {
+                      author: {
+                        select: {
+                          id: true,
+                          fullName: true,
+                          imageUrl: true,
+                        }
+                      },
+                      children: true
+                    }
+                  }
+                }
+              },
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
+        }
+      }
+    },
   })
 }
