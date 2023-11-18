@@ -3,6 +3,7 @@ import UserEntity from "../entities/user.entity";
 
 import bcrypt from 'bcrypt';
 import db from '../utils/db';
+import { getAllFriends } from "./friend.services";
 
 const findUserByEmail = async function (email: string): Promise<UserEntity | null> {
   const user = await db.user.findUnique({
@@ -25,6 +26,9 @@ async function findUserById(id: number) {
     where: {
       id,
     },
+    include: {
+      friends: true
+    }
   });
 }
 
@@ -53,10 +57,39 @@ async function getUser(id: number) {
   });
 }
 
+async function getSuggestionUser(userId: number, offset: number, limit: number) {
+  const data = await getAllFriends(userId);
+  const listFriends = data.map(({friend}) => friend.id);
+  return await db.user.findMany({
+    take: limit,
+    skip: (offset * limit) - limit,
+    where: {
+      id: {
+        notIn: [...listFriends, userId]
+      },
+    },
+    select: {
+      id: true,
+      email: true,
+      fullName: true,
+      location: true,
+      job: true,
+      imageUrl: true,
+      description: true,
+      createdAt: true,
+      updatedAt: true,
+    },
+    orderBy: {
+      createdAt: 'desc'
+    }
+});
+}
+
 export {
   findUserByEmail,
   findUserById,
   createUserByEmailAndPassword,
   updateUserById,
-  getUser
+  getUser,
+  getSuggestionUser
 };

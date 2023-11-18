@@ -25,6 +25,9 @@ export async function getComments(postId: string) {
     where: {
       postId
     },
+    orderBy: {
+      createdAt: 'desc',
+    },
     include: {
       author: {
         select: {
@@ -40,7 +43,7 @@ export async function getComments(postId: string) {
               id: true,
               fullName: true,
               imageUrl: true,
-            }
+            },
           },
           children: {
             include: {

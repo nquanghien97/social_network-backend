@@ -52,8 +52,10 @@ export async function getAllPost(userId: number) {
   })
 }
 
-export async function getNewFeed(userIds: number[]) {
+export async function getNewFeed(userIds: number[], offset: number, limit: number) {
   return await db.post.findMany({
+    // take: limit,
+    // skip: (offset * limit) - limit,
     where: {
       userId: {
         in: userIds

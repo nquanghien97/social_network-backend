@@ -1,12 +1,12 @@
 import { Router, Response } from 'express';
-import { findUserById, updateUserById } from '../services/user.services';
+import { findUserById, getSuggestionUser, updateUserById } from '../services/user.services';
 import verifyToken from '../middleware/auth';
 import multer from '../utils/multer';
 import cloudinary from '../utils/cloudinary';
 
 const router = Router();
 
-router.get('/user',verifyToken, async (req: any, res: Response) => {
+router.get('/user', verifyToken, async (req: any, res: Response) => {
   const userId = req.userId;
   if(!userId) return res.status(401).json({
     success: false,
@@ -29,6 +29,7 @@ router.get('/user',verifyToken, async (req: any, res: Response) => {
         imageUrl: user.imageUrl,
         description: user.description,
         job: user.job,
+        friendQuantity: user.friends.length,
         createdAt: user.createdAt,
         updatedAt: user.updatedAt
       }
@@ -121,5 +122,25 @@ router.post('/find-user', verifyToken, async (req, res) => {
   })
   }
 });
+
+router.post('/suggestions-user', verifyToken, async (req: any, res) => {
+  const userId = req.userId;
+  const { offset, limit } = req.body
+  try {
+    const suggesttionsUser = await getSuggestionUser(userId, offset, limit)
+    return res.status(200).json({
+      success: true,
+      message: "Get Suggestions User successfully",
+      total: suggesttionsUser.length,
+      suggesttionsUser
+    })
+  } catch(err: any) {
+    res.status(500).json({
+      success: false,
+      message: "Get Suggestion User Error",
+      error: err.message,
+  })
+  }
+})
                       
 export default router

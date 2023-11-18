@@ -52,11 +52,6 @@ router.get('/posts', verifyToken, async (req: any, res: Response) => {
   })
   try {
     const data = await getAllPost(userId);
-    // let comments
-    // data.forEach((post) => {
-    //   comments = post.comments.filter(comment => comment === null)
-    //   post.comments = comments
-    // })
     return res.status(200).json({
       success: true,
       message: "Get post successfully",
@@ -93,9 +88,9 @@ router.get('/post/:postId', verifyToken, async (req: any, res) => {
 //get new feed
 router.post('/feed', verifyToken, async (req: any, res: Response) =>{
   const userId = req.userId
-  const { listFriendsId } = req.body
+  const { listFriendsId, offset, limit } = req.body
   try {
-    const data = await getNewFeed([...listFriendsId, userId]);
+    const data = await getNewFeed([...listFriendsId, userId], offset, limit);
     return res.status(200).json({
       success: true,
       message: "Get post successfully",
@@ -114,7 +109,11 @@ router.delete('/post', verifyToken, async (req: any, res: Response) => {
   const userId = req.userId;
   const { postId } = req.body;
   try {
+    const post = await getPostById(postId);
     await deletePost(postId, userId);
+    if (post) {
+      await cloudinary.v2.uploader.destroy(post.cloudinary_id as string);
+    }
     return res.status(200).json({
       success: true,
       message: "Delete post successfully",
