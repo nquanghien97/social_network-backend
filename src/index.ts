@@ -56,6 +56,12 @@ connection.connect(function (err) {
     console.log("Connected!");
 });
 
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: 'Welcome to Project!!',
+  });
+});
+
 app.listen(port, function () {
     console.log(`App Listening on port ${port}`);
 });
