@@ -8,26 +8,36 @@ import multer from '../utils/multer';
 const router = Router();
 
 router.post('/post', multer.single('image'), verifyToken, async (req: any, res: Response) => {
-
-  const result = await cloudinary.v2.uploader.upload(req.file.path, {
-    folder: "social-network/post",
-    use_filename: true,
-  });
-
   const userId = req.userId;
   const { title, text } = req.body;
-  if (!userId) return res.status(401).json({
-    success: false,
-    message: "Unauthorized"
-  })
-  const postData: createPostDTO = {
-    title: title,
-    text: text,
-    imageUrl: result.secure_url,
-    cloudinary_id: result.public_id,
-    userId
-  }
+
   try {
+    if(!req.file) {
+      const postData: createPostDTO = {
+        title: title,
+        text: text,
+        userId
+      }
+      const newPost = await createPost(postData);
+      return res.status(200).json({
+        success: true,
+        message: "Post created successfully",
+        post: newPost
+      })
+    }
+    
+    const result = await cloudinary.v2.uploader.upload(req.file.path, {
+      folder: "social-network/post",
+      use_filename: true,
+    });
+    
+    const postData: createPostDTO = {
+      title: title,
+      text: text,
+      imageUrl: result.secure_url,
+      cloudinary_id: result.public_id,
+      userId
+    }
     const newPost = await createPost(postData);
     return res.status(200).json({
       success: true,
