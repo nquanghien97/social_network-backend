@@ -85,11 +85,29 @@ async function getSuggestionUser(userId: number, offset: number, limit: number) 
 });
 }
 
+//search users
+async function searchUsers(searchText: string) {
+  const usersResult = await db.user.findMany({
+    where: {
+      OR: [
+        {
+          fullName: {
+            contains: searchText,
+            mode: 'insensitive',
+          },
+        }
+      ]
+    },
+  })
+  return usersResult;
+}
+
 export {
   findUserByEmail,
   findUserById,
   createUserByEmailAndPassword,
   updateUserById,
   getUser,
-  getSuggestionUser
+  getSuggestionUser,
+  searchUsers
 };

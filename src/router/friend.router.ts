@@ -35,14 +35,9 @@ router.post('/add-friend', verifyToken, async (req: any, res) => {
   }
 })
 
-router.get('/friend', verifyToken, async (req: any, res) => {
-  const userId = req.userId;
-  if(!userId) {
-    return res.status(401).json({
-      success: false,
-      message: "Unauthorized"
-    })
-  }
+router.post('/friend', verifyToken, async (req: any, res) => {
+  const { userId } = req.body;
+  
   try {
     const data = await getAllFriends(userId);
     const listFriends = data.map(({friend}) => friend);

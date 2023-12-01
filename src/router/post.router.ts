@@ -54,8 +54,8 @@ router.post('/post', multer.single('image'), verifyToken, async (req: any, res: 
 })
 
 //get post
-router.get('/posts', verifyToken, async (req: any, res: Response) => {
-  const userId = req.userId;
+router.post('/posts', verifyToken, async (req: any, res: Response) => {
+  const { userId } = req.body
   if(!userId) return res.status(401).json({
     success: false,
     message: "Unauthorized"
