@@ -1,8 +1,7 @@
-// import express from 'express';
-const express = require('express');
-const mysql = require('mysql');
-const dotenv = require('dotenv');
-const cors = require('cors');
+import express from 'express';
+import mysql from 'mysql';
+import * as dotenv from 'dotenv';
+import cors from 'cors';
 
 import authRouter from './router/auth.router';
 import userRouter from './router/user.router';
@@ -34,12 +33,12 @@ const connection = mysql.createConnection({
     database: process.env.DB_NAME,
 });
 
-connection.connect(function (err: any) {
+connection.connect(function (err) {
     if (err) throw err;
     console.log("Connected!");
 });
 
-app.get('/', (req: any, res: any) => {
+app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to Project!!',
   });
