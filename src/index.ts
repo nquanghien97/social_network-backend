@@ -1,4 +1,5 @@
-import express from 'express';
+// import express from 'express';
+const express = require('express');
 import mysql from 'mysql';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
@@ -38,7 +39,7 @@ connection.connect(function (err) {
     console.log("Connected!");
 });
 
-app.get('/', (req, res) => {
+app.get('/', (req: any, res: any) => {
   res.status(200).json({
     message: 'Welcome to Project!!',
   });
