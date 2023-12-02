@@ -1,8 +1,8 @@
 // import express from 'express';
 const express = require('express');
-import mysql from 'mysql';
-import * as dotenv from 'dotenv';
-import cors from 'cors';
+const mysql = require('mysql');
+const dotenv = require('dotenv');
+const cors = require('cors');
 
 import authRouter from './router/auth.router';
 import userRouter from './router/user.router';
@@ -34,7 +34,7 @@ const connection = mysql.createConnection({
     database: process.env.DB_NAME,
 });
 
-connection.connect(function (err) {
+connection.connect(function (err: any) {
     if (err) throw err;
     console.log("Connected!");
 });
