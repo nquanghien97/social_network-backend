@@ -127,6 +127,7 @@ router.delete('/post', verifyToken, async (req: any, res: Response) => {
     return res.status(200).json({
       success: true,
       message: "Delete post successfully",
+      post
     })
   } catch (err: any) {
     return res.status(400).json({

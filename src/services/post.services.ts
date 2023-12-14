@@ -1,10 +1,42 @@
 import { createPostDTO } from '../dto/post.dto';
-import cloudinary from '../utils/cloudinary';
 import db from '../utils/db';
 
 export async function createPost(newPost: createPostDTO) {
   return await db.post.create({
-    data: newPost
+    data: newPost,
+    select: {
+      id: true,
+      title: true,
+      text: true,
+      imageUrl: true,
+      createdAt: true,
+      updatedAt: true,
+      author: {
+        select: {
+          id: true,
+          fullName: true,
+          job: true,
+          imageUrl: true,
+        }
+      },
+      like: true,
+      comments: {
+        take: 1,
+        include: {
+          author: {
+            select: {
+              id: true,
+              fullName: true,
+              imageUrl: true,
+            }
+          },
+
+        },
+        orderBy: {
+          updatedAt: 'desc'
+        }
+      }
+    }
   })
 }
 
@@ -54,8 +86,8 @@ export async function getAllPost(userId: number) {
 
 export async function getNewFeed(userIds: number[], offset: number, limit: number) {
   return await db.post.findMany({
-    // take: limit,
-    // skip: (offset * limit) - limit,
+    take: limit,
+    skip: (offset * limit) - limit,
     where: {
       userId: {
         in: userIds
