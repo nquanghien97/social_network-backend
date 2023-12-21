@@ -30,7 +30,7 @@ router.post('/like', verifyToken, async (req: any, res) => {
   } catch (err) {
     return res.status(404).json({
       success: false,
-      message: "Like failed"
+      message: "Like failed, try again"
     })
   }
 })

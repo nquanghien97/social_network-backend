@@ -5,7 +5,6 @@ generator client {
 datasource db {
   provider = "postgresql"
   url      = env("POSTGRES_PRISMA_URL")
-  directUrl = env("POSTGRES_URL_NON_POOLING")
 }
 
 model User {
@@ -27,7 +26,7 @@ model User {
   userToken         RefreshToken[]
   friends           Friends[]      @relation(name: "users")
   friendUserFriends Friends[]      @relation(name: "friend_users")
-  like      Like[]     
+  like              Like[]     
 }
 
 model Friends {
@@ -46,10 +45,10 @@ model Post {
   text          String?    @db.VarChar(255)
   imageUrl      String?    @db.VarChar(255)
   cloudinary_id String?    @db.VarChar(255)
-  author          User       @relation(fields: [userId], references: [id])
+  author        User       @relation(fields: [userId], references: [id])
   userId        Int
   comments      Comments[]
-  like    Like[]
+  like          Like[]
   createdAt     DateTime   @default(now()) @db.Timestamp(0)
   updatedAt     DateTime   @updatedAt @db.Timestamp(0)
 }
