@@ -80,11 +80,14 @@ router.post('/posts', verifyToken, async (req: any, res: Response) => {
 router.get('/post/:postId', verifyToken, async (req: any, res) => {
   const { postId } = req.params;
   try {
-    const post = await getPostById(postId)
+    const postById = await getPostById(postId)
     return res.status(200).json({
       success: true,
       message: "Get post successfully",
-      post
+      post: {
+        ...postById,
+        likeCount: postById?.like.length
+      }
     })
   } catch (err: any) {
     return res.status(400).json({
