@@ -81,12 +81,16 @@ router.get('/post/:postId', verifyToken, async (req: any, res) => {
   const { postId } = req.params;
   try {
     const postById = await getPostById(postId)
+    if(!postById) return res.status(400).json({
+      success: false,
+      message: "Post not found"
+    })
     return res.status(200).json({
       success: true,
       message: "Get post successfully",
       post: {
         ...postById,
-        likeCount: postById?.like.length
+        likeCount: postById.like.length
       }
     })
   } catch (err: any) {
