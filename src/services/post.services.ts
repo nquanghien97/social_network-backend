@@ -20,6 +20,12 @@ export async function createPost(newPost: createPostDTO) {
         }
       },
       like: true,
+      _count: {
+        select: {
+          like: true,
+          comments: true,
+        }
+      },
       comments: {
         take: 1,
         include: {
@@ -76,6 +82,12 @@ export async function getAllPost(userId: number) {
         orderBy: {
           updatedAt: 'desc'
         }
+      },
+      _count: {
+        select: {
+          like: true,
+          comments: true,
+        }
       }
     },
     orderBy: {
@@ -109,6 +121,12 @@ export async function getNewFeed(userIds: number[], offset: number, limit: numbe
         }
       },
       like: true,
+      _count: {
+        select: {
+          like: true,
+          comments: true,
+        }
+      },
       comments: {
         take: 1,
         include: {
@@ -124,7 +142,7 @@ export async function getNewFeed(userIds: number[], offset: number, limit: numbe
         orderBy: {
           updatedAt: 'desc'
         }
-      }
+      },
     },
     orderBy: {
       updatedAt: 'desc'
@@ -149,6 +167,12 @@ export async function getPostById(postId: string) {
     include: {
       author: true,
       like: true,
+      _count: {
+        select: {
+          like: true,
+          comments: true,
+        },
+      },
       comments: {
         include: {
           author: {

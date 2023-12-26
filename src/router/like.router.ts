@@ -19,13 +19,15 @@ router.post('/like', verifyToken, async (req: any, res) => {
       await deleteLikePost(userId, postId)
       return res.status(200).json({
         success: true,
-        message: "unlike post successfully"
+        message: "unlike post successfully",
+        status: "unlike"
       })
     }
     await likePost(userId, postId)
     return res.status(200).json({
       success: true,
-      message: "like post successfully"
+      message: "like post successfully",
+      status: "like"
     })
   } catch (err) {
     return res.status(404).json({

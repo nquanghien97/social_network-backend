@@ -88,10 +88,7 @@ router.get('/post/:postId', verifyToken, async (req: any, res) => {
     return res.status(200).json({
       success: true,
       message: "Get post successfully",
-      post: {
-        ...postById,
-        likeCount: postById.like.length
-      }
+      post: postById
     })
   } catch (err: any) {
     return res.status(400).json({
@@ -110,7 +107,7 @@ router.post('/feed', verifyToken, async (req: any, res: Response) =>{
     const data = await getNewFeed([...listFriendsId, userId], offset, limit);
     return res.status(200).json({
       success: true,
-      message: "Get post successfully",
+      message: "Get feed successfully",
       posts: data
     })
   } catch (err: any) {
