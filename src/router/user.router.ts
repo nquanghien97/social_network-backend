@@ -102,18 +102,7 @@ router.post('/user', verifyToken, async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Get User Success",
-      user: {
-        id: user.id,
-        email: user.email,
-        fullName: user.fullName,
-        location: user.location,
-        imageUrl: user.imageUrl,
-        description: user.description,
-        friendQuantity: user.friends.length,
-        job: user.job,
-        createdAt: user.createdAt,
-        updatedAt: user.updatedAt
-      }
+      user
     })
   } catch (err: any) {
     res.status(500).json({

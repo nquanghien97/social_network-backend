@@ -27,7 +27,9 @@ async function findUserById(id: number) {
       id,
     },
     include: {
-      friends: true
+      friends: true,
+      followers: true,
+      following: true,
     }
   });
 }

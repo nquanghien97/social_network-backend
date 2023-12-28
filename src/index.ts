@@ -7,6 +7,7 @@ import userRouter from './router/user.router';
 import postRouter from './router/post.router';
 import friendRouter from './router/friend.router';
 import likeRouter from './router/like.router';
+import followRouter from './router/follow.router';
 import commentsRouter from './router/comments.router';
 
 const port = 5000;
@@ -23,6 +24,7 @@ app.use('/api', userRouter);
 app.use('/api/', postRouter);
 app.use('/api/', friendRouter);
 app.use('/api/', likeRouter);
+app.use('/api/', followRouter);
 app.use('/api/', commentsRouter);
 
 app.get('/', (req, res) => {

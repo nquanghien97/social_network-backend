@@ -21,7 +21,7 @@ router.post('/add-friend', verifyToken, async (req: any, res) => {
         message: "Friend already exists"
       })
     }
-    const data = await addNewFriend({userId, friendId})
+    await addNewFriend({userId, friendId})
     return res.status(200).json({
       success: true,
       message: "Add Friend successfully",
