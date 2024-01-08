@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { findUserById, getSuggestionUser, searchUsers, updateUserById } from '../services/user.services';
+import { findUserById, getSuggestionUser, searchUsers, updateAvatarUser, updateUserById } from '../services/user.services';
 import verifyToken from '../middleware/auth';
 import multer from '../utils/multer';
 import cloudinary from '../utils/cloudinary';
@@ -43,14 +43,9 @@ router.get('/current-user', verifyToken, async (req: any, res: Response) => {
   }
 })
 
-router.post('/update-user', multer.single('image'), verifyToken, async (req: any, res: Response) => {
+router.post('/update-avatar', multer.single('image'), verifyToken, async (req: any, res: Response) => {
   const userId = req.userId;
-  const { fullName, location, description, job } = req.body;
-  let result
-  if(!userId) return res.status(401).json({
-    success: false,
-    message: "Unauthorized"
-  })
+  let result;
   try {
     const user = await findUserById(userId);
     if(!user?.imageUrl) {
@@ -58,6 +53,12 @@ router.post('/update-user', multer.single('image'), verifyToken, async (req: any
         folder: "social-network/user",
         use_filename: true,
       });
+    }
+    if(!req.file) {
+      return res.status(500).json({
+        success: false,
+        message: "Update User Error",
+      })
     }
     if(req.file && user?.imageUrl) {
       await cloudinary.v2.uploader.destroy(user.cloudinary_id as string);
@@ -67,6 +68,34 @@ router.post('/update-user', multer.single('image'), verifyToken, async (req: any
       });
     }
   
+    const updateUser = await updateAvatarUser(
+      userId,
+      {
+        imageUrl: result?.secure_url || user?.imageUrl as string,
+        cloudinary_id: result?.public_id || user?.cloudinary_id as string
+      })
+    return res.status(200).json({
+      success: true,
+      message: 'Update Avatar User Successfully',
+      user: updateUser
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: "Update User Error",
+      error: err.message,
+    })
+  }
+})
+
+router.post('/update-user', verifyToken, async (req: any, res: Response) => {
+  const userId = req.userId;
+  const { fullName, location, description, job } = req.body;
+  if(!userId) return res.status(401).json({
+    success: false,
+    message: "Unauthorized"
+  })
+  try {  
     const updateUser = await updateUserById(
       userId,
       {
@@ -74,8 +103,6 @@ router.post('/update-user', multer.single('image'), verifyToken, async (req: any
         location,
         description,
         job,
-        imageUrl: result?.secure_url || user?.imageUrl as string,
-        cloudinary_id: result?.public_id || user?.cloudinary_id as string
       })
     return res.status(200).json({
       success: true,

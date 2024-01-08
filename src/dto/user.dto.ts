@@ -9,6 +9,9 @@ export interface updateUserDTO {
   location?: string;
   description?: string;
   job?: string;
-  imageUrl?: string;
+}
+
+export interface updateAvatarDTO {
+  imageUrl: string;
   cloudinary_id?: string;
 }

@@ -1,4 +1,4 @@
-import { createUserDTO, updateUserDTO } from "../dto/user.dto";
+import { createUserDTO, updateAvatarDTO, updateUserDTO } from "../dto/user.dto";
 import UserEntity from "../entities/user.entity";
 
 import bcrypt from 'bcrypt';
@@ -42,6 +42,15 @@ const updateUserById = async (id: number, data: updateUserDTO) => {
     data: data
   })
   return updateUser;
+}
+
+const updateAvatarUser = async (id: number, data: updateAvatarDTO) => {
+  return await db.user.update({
+    where: {
+      id,
+    },
+    data
+  })
 }
 
 async function getUser(id: number) {
@@ -109,7 +118,8 @@ export {
   findUserById,
   createUserByEmailAndPassword,
   updateUserById,
+  updateAvatarUser,
   getUser,
   getSuggestionUser,
-  searchUsers
+  searchUsers,
 };
