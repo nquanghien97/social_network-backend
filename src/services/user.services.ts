@@ -111,7 +111,7 @@ async function searchUsers(searchText: string) {
     },
   })
   return usersResult;
-}
+};
 
 export {
   findUserByEmail,

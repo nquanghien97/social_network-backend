@@ -129,7 +129,10 @@ router.post('/user', verifyToken, async (req, res) => {
     res.status(200).json({
       success: true,
       message: "Get User Success",
-      user
+      user: {
+        ...user,
+        friendQuantity: user.friends.length,
+      }
     })
   } catch (err: any) {
     res.status(500).json({
@@ -176,6 +179,6 @@ router.post('/search-users', verifyToken, async (req: any, res) => {
       error: err.message,
   })
   }
-})
-                      
+});
+           
 export default router

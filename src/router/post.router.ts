@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import verifyToken from '../middleware/auth';
-import { createPost, deletePost, getAllPost, getNewFeed, getPostById } from '../services/post.services';
+import { createPost, deletePost, getAllPost, getImagesOfPost, getNewFeed, getPostById } from '../services/post.services';
 import cloudinary from '../utils/cloudinary';
 import { createPostDTO } from '../dto/post.dto';
 import multer from '../utils/multer';
@@ -141,6 +141,24 @@ router.delete('/post', verifyToken, async (req: any, res: Response) => {
     })
   }
 })
+
+router.post('/photos',verifyToken, async (req: any, res) => {
+  const { userId } = req.body;
+  try {
+    const imagesUser = await getImagesOfPost(userId);
+    return res.status(200).json({
+      success: true,
+      message: "Get Images User Successfully",
+      imagesUser
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: "get Images Failed",
+      error: err.message,
+    })
+  }
+});
 
 export default router;
 

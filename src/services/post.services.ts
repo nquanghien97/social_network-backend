@@ -224,3 +224,14 @@ export async function getPostById(postId: string) {
     },
   })
 }
+
+export async function getImagesOfPost(userId: number) {
+  return await db.post.findMany({
+    where: {
+      userId
+    },
+    select: {
+      imageUrl: true,
+    }
+  })
+}
