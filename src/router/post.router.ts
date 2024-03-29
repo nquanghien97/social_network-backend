@@ -152,7 +152,7 @@ router.post('/photos',verifyToken, async (req: any, res) => {
       imagesUser
     })
   } catch (err: any) {
-    res.status(500).json({
+    res.status(400).json({
       success: false,
       message: "get Images Failed",
       error: err.message,
