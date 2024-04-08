@@ -125,7 +125,7 @@ router.delete('/post', verifyToken, async (req: any, res: Response) => {
   try {
     const post = await getPostById(postId);
     await deletePost(postId, userId);
-    if (post) {
+    if (post?.cloudinary_id) {
       await cloudinary.v2.uploader.destroy(post.cloudinary_id as string);
     }
     return res.status(200).json({

@@ -99,4 +99,8 @@ export async function deleteComment(commentId: string) {
       id: commentId
     }
   })
-}
+};
+
+export async function editComment(commentId: string, content: string) {
+  
+};
