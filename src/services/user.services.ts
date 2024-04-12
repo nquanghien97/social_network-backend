@@ -44,6 +44,17 @@ const updateUserById = async (id: number, data: updateUserDTO) => {
   return updateUser;
 }
 
+function updatePassword(userId: number, password: string) {
+  return db.user.update({
+    where: {
+      id: userId,
+    },
+    data: {
+      password
+    }
+  })
+}
+
 const updateAvatarUser = async (id: number, data: updateAvatarDTO) => {
   return await db.user.update({
     where: {
@@ -122,4 +133,5 @@ export {
   getUser,
   getSuggestionUser,
   searchUsers,
+  updatePassword
 };

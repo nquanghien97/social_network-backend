@@ -44,9 +44,39 @@ function revokeTokens(userId: number) {
   });
 }
 
+function createEmailToken({ userId, token, jti } : {userId: number, token: string, jti: string}) {
+  return db.token.create({
+    data: {
+      id: jti,
+      userId,
+      token,
+    }
+  })
+};
+function findEmailToken(userId: number, token?: string) {
+  return db.token.findFirst({
+    where: {
+      userId,
+      token
+    }
+  })
+}
+
+function deleteEmailToken(userId: number, token: string) {
+  return db.token.deleteMany({
+    where: {
+      userId,
+      token
+    }
+  })
+}
+
 export {
   addRefreshTokenToWhitelist,
   findRefreshTokenById,
   deleteRefreshToken,
-  revokeTokens
+  revokeTokens,
+  createEmailToken,
+  findEmailToken,
+  deleteEmailToken
 };

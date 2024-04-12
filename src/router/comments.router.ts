@@ -1,7 +1,6 @@
 import { Router } from 'express';
 import verifyToken from '../middleware/auth';
 import { addComments, deleteComment, getComments } from '../services/comments.services';
-import CommentEntity from '../entities/comment.entity';
 
 const router = Router();
 
