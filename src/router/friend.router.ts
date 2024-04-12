@@ -130,7 +130,7 @@ router.get('/id-friend', verifyToken, async (req: any, res) => {
       listFriendsId
     })
   } catch (err: any){
-    res.status(400).json({
+    res.status(500).json({
       success: false,
       message: "Failed to get friend",
       error: err.message

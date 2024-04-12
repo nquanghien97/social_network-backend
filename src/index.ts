@@ -30,7 +30,6 @@ app.use('/api/', commentsRouter);
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to Social-network Project!!',
-    abc: `${process.env.POSTGRES_URL_NON_POOLING}`
   });
 });
 
