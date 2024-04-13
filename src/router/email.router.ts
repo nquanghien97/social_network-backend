@@ -57,9 +57,9 @@ router.post('/:id/:token', async (req: any, res) => {
     const token = await findEmailToken(user.id, emailToken);
     if (!token) return res.status(400).json({
       success: false,
-      message: "invalid link or expired"
+      message: "Invalid link or link expired"
     });
-    const hashPassword = bcrypt.hashSync(user.password, 12);
+    const hashPassword = bcrypt.hashSync(password, 12);
     await updatePassword(userId, hashPassword);
     await deleteEmailToken(userId, emailToken);
     return res.status(200).json({
