@@ -1,5 +1,5 @@
 import { Router, Response } from 'express';
-import { findUserById, getSuggestionUser, searchUsers, updateAvatarUser, updateUserById } from '../services/user.services';
+import { findUserById, getSuggestionUser, searchUsers, updateAvatarUser, updatePassword, updateUserById } from '../services/user.services';
 import verifyToken from '../middleware/auth';
 import multer from '../utils/multer';
 import cloudinary from '../utils/cloudinary';
@@ -48,7 +48,7 @@ router.post('/update-avatar', multer.single('image'), verifyToken, async (req: a
   let result;
   try {
     const user = await findUserById(userId);
-    if(!user?.imageUrl) {
+    if(!user?.imageUrl && req.file) {
       result = await cloudinary.v2.uploader.upload(req.file.path, {
         folder: "social-network/user",
         use_filename: true,
@@ -57,7 +57,7 @@ router.post('/update-avatar', multer.single('image'), verifyToken, async (req: a
     if(!req.file) {
       return res.status(500).json({
         success: false,
-        message: "Update User Error",
+        message: "Update Avatar Error",
       })
     }
     if(req.file && user?.imageUrl) {

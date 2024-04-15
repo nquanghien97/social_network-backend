@@ -4,6 +4,7 @@ import { createEmailToken, deleteEmailToken, findEmailToken } from "../services/
 import { v4 as uuidv4 } from 'uuid';
 import sendEmail from "../utils/email";
 import bcrypt from 'bcrypt';
+import verifyToken from "../middleware/auth";
 
 const router = Router();
 
@@ -29,7 +30,7 @@ router.post('/reset-password', async (req: any, res) => {
     await sendEmail({
       email: user.email,
       subject: "Password reset",
-      text: link,
+      text: `Bạn vào link sau để đặt lại mật khẩu của bạn ${link}`,
     });
     return res.status(200).json({
       success: true,
@@ -72,6 +73,39 @@ router.post('/:id/:token', async (req: any, res) => {
       message: "Something went wrong",
       error: err.message
     })
+  }
+});
+
+router.post('/update-password', verifyToken, async (req: any, res) => {
+  const userId = req.userId;
+  const { oldPassword, newPassword } = req.body;
+  try {
+    const user = await findUserById(Number(userId))
+    if(!user) {
+      return res.status(404).json({
+        success: false,
+        message: "Unauthorized"
+      });
+    }
+    const validPassword = await bcrypt.compare(oldPassword, user.password);
+    if(!validPassword) {
+      return res.status(404).json({
+        success: false,
+        message: "Old password is incorrect"
+      })
+    }
+    const hashNewPassword = bcrypt.hashSync(newPassword, 12);
+    await updatePassword(userId, hashNewPassword);
+    return res.status(200).json({
+      success: true,
+      message: "Update password successfully",
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: "Update password failed",
+      error: err.message,
+  })
   }
 });
 
