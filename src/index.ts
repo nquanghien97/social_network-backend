@@ -2,6 +2,8 @@ import express from 'express';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 
+import { createServer } from 'http';
+
 import authRouter from './router/auth.router';
 import userRouter from './router/user.router';
 import postRouter from './router/post.router';
@@ -35,7 +37,30 @@ app.get('/', (req, res) => {
   });
 });
 
-app.listen(port, function () {
+//socket.io
+const httpServer = createServer(app);
+import { Server } from 'socket.io';
+
+const io = new Server(httpServer, {
+  cors: {
+    origin: '*',
+  }
+});
+
+io.on('connection', (socket) => {
+  console.log("connection")
+  socket.on("sendDataClient", function(data) { // Handle khi có sự kiện tên là sendDataClient từ phía client
+    io.emit("sendDataServer", { data });// phát sự kiện  có tên sendDataServer cùng với dữ liệu tin nhắn từ phía server
+  })
+
+  socket.on("disconnect", () => {
+    console.log("Client disconnected"); // Khi client disconnect thì log ra terminal.
+  });
+})
+
+
+
+httpServer.listen(port, function () {
     console.log(`App Listening on port ${port}`);
 });
 

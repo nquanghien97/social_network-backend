@@ -91,7 +91,7 @@ export async function getAllPost(userId: number) {
       }
     },
     orderBy: {
-      updatedAt: 'desc'
+      updatedAt: 'desc',
     },
   })
 }
