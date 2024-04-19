@@ -25,6 +25,17 @@ export async function getConversation(conversationId: string) {
   })
 }
 
+export async function createConversation(senderId: number, receiverId: number) {
+  return await db.conversation.create({
+    data: {
+      participants: {
+        connect: [{ id: senderId }, { id: receiverId }],
+      },
+    },
+  });
+
+}
+
 interface Message {
   text: string   
   senderId: number    

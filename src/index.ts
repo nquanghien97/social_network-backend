@@ -3,6 +3,7 @@ import * as dotenv from 'dotenv';
 import cors from 'cors';
 
 import { createServer } from 'http';
+import { Server } from 'socket.io';
 
 import authRouter from './router/auth.router';
 import userRouter from './router/user.router';
@@ -12,9 +13,11 @@ import likeRouter from './router/like.router';
 import followRouter from './router/follow.router';
 import commentsRouter from './router/comments.router';
 import passwordRouter from './router/password.router';
+import messageRouter from './router/message.router';
 
 const port = 5000;
 const app = express();
+const httpServer = createServer(app);
 
 dotenv.config();
 app.use(cors());
@@ -30,16 +33,13 @@ app.use('/api/', likeRouter);
 app.use('/api/', followRouter);
 app.use('/api/', commentsRouter);
 app.use('/api/', passwordRouter);
+app.use('/api/', messageRouter)
 
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to Social-network Project!!',
   });
 });
-
-//socket.io
-const httpServer = createServer(app);
-import { Server } from 'socket.io';
 
 const io = new Server(httpServer, {
   cors: {
@@ -48,14 +48,7 @@ const io = new Server(httpServer, {
 });
 
 io.on('connection', (socket) => {
-  console.log("connection")
-  socket.on("sendDataClient", function(data) { // Handle khi có sự kiện tên là sendDataClient từ phía client
-    io.emit("sendDataServer", { data });// phát sự kiện  có tên sendDataServer cùng với dữ liệu tin nhắn từ phía server
-  })
-
-  socket.on("disconnect", () => {
-    console.log("Client disconnected"); // Khi client disconnect thì log ra terminal.
-  });
+  console.log(`User connected ${socket.id}`)
 })
 
 
