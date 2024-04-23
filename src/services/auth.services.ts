@@ -2,7 +2,7 @@ import db from '../utils/db';
 import { hashToken } from '../utils/hashToken';
 
 // used when we create a refresh token.
-function addRefreshTokenToWhitelist({ jti, refreshToken, userId }: { jti: string, refreshToken: string, userId: number }) {
+function addRefreshTokenToWhitelist({ jti, refreshToken, userId }: { jti: string, refreshToken: string, userId: string }) {
   return db.refreshToken.create({
     data: {
       id: jti,
@@ -33,7 +33,7 @@ function deleteRefreshToken(id: string) {
   });
 }
 
-function revokeTokens(userId: number) {
+function revokeTokens(userId: string) {
   return db.refreshToken.updateMany({
     where: {
       userId
@@ -44,7 +44,7 @@ function revokeTokens(userId: number) {
   });
 }
 
-function createEmailToken({ userId, token, jti } : {userId: number, token: string, jti: string}) {
+function createEmailToken({ userId, token, jti } : {userId: string, token: string, jti: string}) {
   return db.token.create({
     data: {
       id: jti,
@@ -53,7 +53,7 @@ function createEmailToken({ userId, token, jti } : {userId: number, token: strin
     }
   })
 };
-function findEmailToken(userId: number, token?: string) {
+function findEmailToken(userId: string, token?: string) {
   return db.token.findFirst({
     where: {
       userId,
@@ -62,7 +62,7 @@ function findEmailToken(userId: number, token?: string) {
   })
 }
 
-function deleteEmailToken(userId: number, token: string) {
+function deleteEmailToken(userId: string, token: string) {
   return db.token.deleteMany({
     where: {
       userId,

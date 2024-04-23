@@ -2,7 +2,7 @@ import { AddNewFriendDTO } from "../dto/friend.dto";
 import db from "../utils/db";
 
 
-export async function getAllFriends(userId: number) {
+export async function getAllFriends(userId: string) {
   return await db.friends.findMany({
     where: {
       userId
@@ -27,7 +27,7 @@ export async function addNewFriend(data: AddNewFriendDTO) {
   })
 }
 
-export async function findFriendById({ friendId, userId }: {friendId: number, userId: number}) {
+export async function findFriendById({ friendId, userId }: {friendId: string, userId: string}) {
   return await db.friends.findFirst({
     where: {
       friendId,
@@ -36,7 +36,7 @@ export async function findFriendById({ friendId, userId }: {friendId: number, us
   })
 }
 
-export async function deleteFriendById({ friendId, userId }: {friendId: number, userId: number}) {
+export async function deleteFriendById({ friendId, userId }: {friendId: string, userId: string}) {
   return await db.friends.deleteMany({
     where: {
       friendId,

@@ -8,36 +8,35 @@ datasource db {
 }
 
 model User {
-  id                Int            @id @default(autoincrement())
-  email             String         @unique @db.VarChar(255)
-  password          String         @db.VarChar(255)
-  fullName          String?        @db.VarChar(255)
-  location          String?        @db.VarChar(255)
-  imageUrl          String?        @db.VarChar(255)
-  job               String?        @db.VarChar(255)
-  description       String?        @db.VarChar(255)
-  cloudinary_id     String?        @db.VarChar(255)
-  createdAt         DateTime       @default(now()) @db.Timestamp(0)
-  updatedAt         DateTime       @updatedAt @db.Timestamp(0)
-  isValidEmail      Boolean?       @default(false)  
+  id                String             @id @default(uuid())
+  email             String             @unique @db.VarChar(255)
+  password          String             @db.VarChar(255)
+  fullName          String?            @db.VarChar(255)
+  location          String?            @db.VarChar(255)
+  imageUrl          String?            @db.VarChar(255)
+  job               String?            @db.VarChar(255)
+  description       String?            @db.VarChar(255)
+  cloudinary_id     String?            @db.VarChar(255)
+  createdAt         DateTime           @default(now()) @db.Timestamp(0)
+  updatedAt         DateTime           @updatedAt @db.Timestamp(0)
+  isValidEmail      Boolean?           @default(false)
   comments          Comments[]
-  following         Follows[]      @relation("follower")
-  followers         Follows[]      @relation("following")
-  friendUserFriends Friends[]      @relation("friend_users")
-  friends           Friends[]      @relation("users")
+  following         Follows[]          @relation("follower")
+  followers         Follows[]          @relation("following")
+  friendUserFriends Friends[]          @relation("friend_users")
+  friends           Friends[]          @relation("users")
   like              Like[]
   posts             Post[]
   userToken         RefreshToken[]
   emailToken        Token[]
-  sentMessages      Message[] @relation("SentMessages")
-  receivedMessages  Message[] @relation("ReceivedMessages")
-  conversation      Conversation[]
+  sentMessages      Message[]          @relation("SentMessages")
+  conversation      ConversationUser[]
 }
 
 model Friends {
-  id        Int      @id @default(autoincrement())
-  userId    Int
-  friendId  Int
+  id        String      @id @default(uuid())
+  userId    String
+  friendId  String
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
   friend    User     @relation("friend_users", fields: [friendId], references: [id])
@@ -50,7 +49,7 @@ model Post {
   text          String?    @db.VarChar(255)
   imageUrl      String?    @db.VarChar(255)
   cloudinary_id String?    @db.VarChar(255)
-  userId        Int
+  userId        String
   createdAt     DateTime   @default(now()) @db.Timestamp(0)
   updatedAt     DateTime   @updatedAt @db.Timestamp(0)
   comments      Comments[]
@@ -59,9 +58,9 @@ model Post {
 }
 
 model Follows {
-  followerId  Int
-  followingId Int
-  id          Int  @id @default(autoincrement())
+  followerId  String
+  followingId String
+  id          String  @id @default(uuid())
   follower    User @relation("follower", fields: [followerId], references: [id])
   following   User @relation("following", fields: [followingId], references: [id])
 }
@@ -71,7 +70,7 @@ model Comments {
   content   String?    @db.VarChar(255)
   createdAt DateTime   @default(now())
   updatedAt DateTime   @updatedAt @db.Timestamp(0)
-  userId    Int
+  userId    String
   postId    String
   parentId  String?
   parent    Comments?  @relation("ParentChild", fields: [parentId], references: [id])
@@ -86,22 +85,22 @@ model RefreshToken {
   revoked     Boolean  @default(false)
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
-  userId      Int
+  userId      String
   user        User     @relation(fields: [userId], references: [id])
 }
 
 model Token {
-  id          String   @id @unique @default(uuid())
-  token String   @db.VarChar(255)
-  createdAt   DateTime @default(now())
-  updatedAt   DateTime @updatedAt
-  userId      Int
-  user        User     @relation(fields: [userId], references: [id])
+  id        String   @id @unique @default(uuid())
+  token     String   @db.VarChar(255)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  userId    String
+  user      User     @relation(fields: [userId], references: [id])
 }
 
 model Like {
   id        String   @id @unique @default(uuid())
-  userId    Int
+  userId    String
   postId    String
   createdAt DateTime @default(now())
   post      Post     @relation(fields: [postId], references: [id], onDelete: Cascade)
@@ -109,19 +108,27 @@ model Like {
 }
 
 model Message {
-  id            String   @id @unique @default(uuid())
-  text          String   @db.VarChar(255)
-  createdAt     DateTime @default(now()) @db.Timestamp(0)
-  sender        User     @relation("SentMessages", fields: [senderId], references: [id])
-  senderId      Int
-  receiver      User     @relation("ReceivedMessages", fields: [receiverId], references: [id])
-  receiverId    Int
-  conversation  Conversation[] 
+  id             String        @id @unique @default(uuid())
+  text           String        @db.VarChar(255)
+  createdAt      DateTime      @default(now()) @db.Timestamp(0)
+  author         User          @relation("SentMessages", fields: [authorId], references: [id])
+  authorId       String        @default(uuid())
+  conversation   Conversation? @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
 }
 
 model Conversation {
-  id           String    @id @default(uuid())
-  participants User[]
+  id           String             @id @default(uuid())
   messages     Message[]
-  createAt     DateTime @default(now())
+  createAt     DateTime           @default(now())
+  participants ConversationUser[]
+}
+
+model ConversationUser {
+  id             String       @id @default(uuid())
+  user           User         @relation(fields: [userId], references: [id])
+  userId         String
+  conversation   Conversation @relation(fields: [conversationId], references: [id], onDelete: Cascade)
+  conversationId String
+  isRead         Boolean      @default(true)
 }

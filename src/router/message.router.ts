@@ -22,6 +22,7 @@ router.post('/create-conversation', verifyToken, async (req: any, res) => {
   }
 })
 
+//get messages
 router.post('/messages', verifyToken, async (req: any, res) => {
   const { limit, offset, conversationId } = req.body;
   if(!conversationId) return res.status(404).json({
@@ -44,7 +45,7 @@ router.post('/messages', verifyToken, async (req: any, res) => {
 
 router.post('/send-messages', verifyToken, async (req: any, res) => {
   const senderId = req.userId;
-  const { receiverId, conversationId, text } = req.body;
+  const { conversationId, text } = req.body;
   try {
     // Kiểm tra xem cuộc trò chuyện có tồn tại không
     const conversation = await getConversation(conversationId);
@@ -54,7 +55,7 @@ router.post('/send-messages', verifyToken, async (req: any, res) => {
     }
 
     // Tạo tin nhắn mới và liên kết nó với cuộc trò chuyện
-    const message = await sendMessage({text, senderId, receiverId, conversationId})
+    const message = await sendMessage({text, senderId, conversationId})
 
     return res.status(200).json(message);
   } catch (error: any) {

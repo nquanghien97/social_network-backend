@@ -1,6 +1,6 @@
 import db from '../utils/db';
 
-export async function addComments(userId: number, postId: string, content?: string, parentId?: string) {
+export async function addComments(userId: string, postId: string, content?: string, parentId?: string) {
   return await db.comments.create({
     data: {
       userId,

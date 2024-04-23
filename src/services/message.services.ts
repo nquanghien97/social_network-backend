@@ -1,7 +1,7 @@
 import db from '../utils/db';
 
 export async function fetchMessages(conversationId: string, limit: number, offset: number){
-  return await db.conversation.findMany({
+  return await db.conversation.findUnique({
     where: {
       id: conversationId
     },
@@ -11,9 +11,17 @@ export async function fetchMessages(conversationId: string, limit: number, offse
         skip: (offset * limit) - limit,
         orderBy: {
           createdAt: 'desc',
+        },
+        include: {
+          author: {
+            select: {
+              imageUrl: true
+            }
+          }
         }
-      }
-    }
+      },
+      participants: true,
+    },
   })
 }
 
@@ -25,11 +33,26 @@ export async function getConversation(conversationId: string) {
   })
 }
 
-export async function createConversation(senderId: number, receiverId: number) {
+export async function createConversation(senderId: string, receiverId: string) {
   return await db.conversation.create({
     data: {
       participants: {
-        connect: [{ id: senderId }, { id: receiverId }],
+        create: [
+          {
+            user: {
+              connect: {
+                id: senderId
+              }
+            }
+          },
+          {
+            user: {
+              connect: {
+                id: receiverId
+              }
+            }
+          }
+        ]
       },
     },
   });
@@ -38,8 +61,7 @@ export async function createConversation(senderId: number, receiverId: number) {
 
 interface Message {
   text: string   
-  senderId: number    
-  receiverId: number
+  senderId: string    
   conversationId: string  
 }
 
@@ -47,13 +69,8 @@ export async function sendMessage(data: Message) {
   return await db.message.create({
     data: {
       text: data.text,
-      senderId: data.senderId,
-      receiverId: data.receiverId,
-      conversation: {
-        connect: {
-          id: data.conversationId
-        }
-      },
+      authorId: data.senderId,
+      conversationId:  data.conversationId,
     },
   })
 }

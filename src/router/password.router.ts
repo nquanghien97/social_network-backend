@@ -47,7 +47,7 @@ router.post('/reset-password', async (req: any, res) => {
 
 router.post('/:id/:token', async (req: any, res) => {
   const { password } = req.body;
-  const userId = Number(req.params.id)
+  const userId = req.params.id;
   const emailToken = req.params.token
   try {
     const user = await findUserById(userId);
@@ -80,7 +80,7 @@ router.post('/update-password', verifyToken, async (req: any, res) => {
   const userId = req.userId;
   const { oldPassword, newPassword } = req.body;
   try {
-    const user = await findUserById(Number(userId))
+    const user = await findUserById(userId);
     if(!user) {
       return res.status(404).json({
         success: false,

@@ -1,6 +1,6 @@
 import db from "../utils/db";
 
-export async function likePost(userId: number, postId: string) {
+export async function likePost(userId: string, postId: string) {
   return await db.like.create({
     data: {
       userId,
@@ -9,7 +9,7 @@ export async function likePost(userId: number, postId: string) {
   }) 
 }
 
-export async function deleteLikePost(userId: number, postId: string) {
+export async function deleteLikePost(userId: string, postId: string) {
   return await db.like.deleteMany({
     where: {
       userId,
@@ -18,7 +18,7 @@ export async function deleteLikePost(userId: number, postId: string) {
   }) 
 }
 
-export async function getLikePost(userId: number, postId: string) {
+export async function getLikePost(userId: string, postId: string) {
   return await db.like.findFirst({
     where: {
       userId,

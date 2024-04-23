@@ -1,4 +1,4 @@
 export interface FollowDTO {
-  followerId: number;
-  followingId: number;
+  followerId: string;
+  followingId: string;
 }
