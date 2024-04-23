@@ -45,7 +45,7 @@ router.post('/reset-password', async (req: any, res) => {
   }
 });
 
-router.post('/:id/:token', async (req: any, res) => {
+router.post('/password/:id/:token', async (req: any, res) => {
   const { password } = req.body;
   const userId = req.params.id;
   const emailToken = req.params.token
