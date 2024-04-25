@@ -8,6 +8,14 @@ router.post('/create-conversation', verifyToken, async (req: any, res) => {
   const senderId = req.userId;
   const { receiverId } = req.body;
   try {
+    const exisConversation = await getConversation(receiverId)
+    if(exisConversation) {
+      return res.status(200).json({
+        success: true,
+        message: "Conversation created",
+        exisConversation
+      })
+    }
     const conversation = await createConversation(senderId, receiverId)
     return res.status(200).json({
       success: true,

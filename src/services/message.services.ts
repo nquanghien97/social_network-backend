@@ -25,10 +25,14 @@ export async function fetchMessages(conversationId: string, limit: number, offse
   })
 }
 
-export async function getConversation(conversationId: string) {
-  return await db.conversation.findUnique({
+export async function getConversation(userId: string) {
+  return await db.conversation.findMany({
     where: {
-      id: conversationId
+      participants: {
+        some: {
+          userId
+        }
+      }
     }
   })
 }
