@@ -1,6 +1,6 @@
 import db from '../utils/db';
 
-export async function fetchMessages(conversationId: string, limit: number, offset: number){
+export async function getMessages(conversationId: string, limit: number, offset: number){
   return await db.conversation.findUnique({
     where: {
       id: conversationId
@@ -26,15 +26,9 @@ export async function fetchMessages(conversationId: string, limit: number, offse
 }
 
 export async function getConversation(userId: string) {
-  return await db.conversation.findMany({
-    where: {
-      participants: {
-        some: {
-          userId
-        }
-      }
-    }
-  })
+  // return await db.conversation.findMany({
+  //   where: userId
+  // })
 }
 
 export async function createConversation(senderId: string, receiverId: string) {

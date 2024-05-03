@@ -1,26 +1,39 @@
 import { Router } from 'express';
-import { createConversation, fetchMessages, getConversation, sendMessage } from '../services/message.services';
+import { createConversation, getMessages } from '../services/message.services';
 import verifyToken from '../middleware/auth';
+import db from '../utils/db';
 
 const router = Router();
 
-router.post('/create-conversation', verifyToken, async (req: any, res) => {
+router.post('/conversation', verifyToken, async (req: any, res) => {
   const senderId = req.userId;
   const { receiverId } = req.body;
   try {
-    const exisConversation = await getConversation(receiverId)
-    if(exisConversation) {
+    const participants = [senderId, receiverId]
+    const query = {
+      AND: participants.map((participantId) => ({
+        participants: {
+          some: {
+            userId: participantId,
+          },
+        },
+      })),
+    };
+    const exisConversation = await db.conversation.findMany({
+      where: query
+    })
+    if(exisConversation.length > 0) {
       return res.status(200).json({
         success: true,
-        message: "Conversation created",
-        exisConversation
+        message: "Get Conversation Successfully",
+        conversation: exisConversation[0]
       })
     }
-    const conversation = await createConversation(senderId, receiverId)
+    const newConversation = await createConversation(senderId, receiverId)
     return res.status(200).json({
       success: true,
-      message: "Conversation created",
-      conversation
+      message: "Get Conversation Successfully",
+      conversation: newConversation
     })
   } catch (err: any) {
     return res.status(404).json({
@@ -38,7 +51,7 @@ router.post('/messages', verifyToken, async (req: any, res) => {
     message: "Không tìm thấy cuộc hội thoại"
   })
   try {
-    const message = await fetchMessages(conversationId, limit, offset);
+    const message = await getMessages(conversationId, limit, offset);
     return res.status(200).json({
       success: true,
       message,
@@ -51,24 +64,24 @@ router.post('/messages', verifyToken, async (req: any, res) => {
   }
 })
 
-router.post('/send-messages', verifyToken, async (req: any, res) => {
-  const senderId = req.userId;
-  const { conversationId, text } = req.body;
-  try {
-    // Kiểm tra xem cuộc trò chuyện có tồn tại không
-    const conversation = await getConversation(conversationId);
+// router.post('/send-messages', verifyToken, async (req: any, res) => {
+//   const senderId = req.userId;
+//   const { conversationId, text } = req.body;
+//   try {
+//     // Kiểm tra xem cuộc trò chuyện có tồn tại không
+//     const conversation = await getConversation(conversationId);
 
-    if (!conversation) {
-      throw new Error(`Conversation with id ${conversationId} not found.`);
-    }
+//     if (!conversation) {
+//       throw new Error(`Conversation with id ${conversationId} not found.`);
+//     }
 
-    // Tạo tin nhắn mới và liên kết nó với cuộc trò chuyện
-    const message = await sendMessage({text, senderId, conversationId})
+//     // Tạo tin nhắn mới và liên kết nó với cuộc trò chuyện
+//     const message = await sendMessage({text, senderId, conversationId})
 
-    return res.status(200).json(message);
-  } catch (error: any) {
-    throw new Error(`Failed to send message: ${error.message}`);
-  }
-})
+//     return res.status(200).json(message);
+//   } catch (error: any) {
+//     throw new Error(`Failed to send message: ${error.message}`);
+//   }
+// })
 
 export default router;

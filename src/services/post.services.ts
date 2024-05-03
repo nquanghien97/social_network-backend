@@ -232,6 +232,7 @@ export async function getImagesOfPost(userId: string) {
     },
     select: {
       imageUrl: true,
+      id: true,
     }
   })
 }
