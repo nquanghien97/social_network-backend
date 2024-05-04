@@ -1,3 +1,8 @@
+interface Message {
+  text: string   
+  senderId: string    
+  conversationId: string  
+}
 import db from '../utils/db';
 
 export async function getMessages(conversationId: string, limit: number, offset: number){
@@ -7,28 +12,64 @@ export async function getMessages(conversationId: string, limit: number, offset:
     },
     include: {
       messages: {
-        take: limit,
-        skip: (offset * limit) - limit,
+        take: await calculateLimit(conversationId, limit, offset),
+        skip: await calculateSkip(conversationId, limit, offset),
         orderBy: {
-          createdAt: 'desc',
+          createdAt: 'asc',
         },
         include: {
           author: {
             select: {
-              imageUrl: true
+              imageUrl: true,
+              fullName: true,
             }
-          }
+          },
         }
       },
       participants: true,
     },
   })
 }
+async function calculateSkip(conversationId: string, limit: number, offset: number) {
+  const totalMessages = await db.message.count({
+    where: {
+      conversationId,
+    },
+  });
+  
+  // Tính toán skip
+  let skip = totalMessages - (offset * limit);
+  //offset = 2 -> skip = -1
+  
+  // Kiểm tra nếu skip là số âm, đặt lại thành 0
+  if (skip < 0) {
+    skip = 0;
+  }
 
-export async function getConversation(userId: string) {
-  // return await db.conversation.findMany({
-  //   where: userId
-  // })
+  return skip;
+}
+async function calculateLimit(conversationId: string, limit: number, offset: number) {
+  let limitData = limit
+  const totalMessages = await db.message.count({
+    where: {
+      conversationId,
+    },
+  });
+  
+  // Tính toán skip
+  if ((totalMessages - ((offset - 1) * limit) < limit)) {
+    limitData = totalMessages - (offset - 1) * limit
+  }
+
+  return limitData;
+}
+
+export async function getConversation(conversationId: string) {
+  return await db.conversation.findUnique({
+    where: {
+      id: conversationId
+    }
+  })
 }
 
 export async function createConversation(senderId: string, receiverId: string) {
@@ -57,11 +98,6 @@ export async function createConversation(senderId: string, receiverId: string) {
 
 }
 
-interface Message {
-  text: string   
-  senderId: string    
-  conversationId: string  
-}
 
 export async function sendMessage(data: Message) {
   return await db.message.create({

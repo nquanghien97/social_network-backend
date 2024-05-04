@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createConversation, getMessages } from '../services/message.services';
+import { createConversation, getConversation, getMessages, sendMessage } from '../services/message.services';
 import verifyToken from '../middleware/auth';
 import db from '../utils/db';
 
@@ -20,7 +20,7 @@ router.post('/conversation', verifyToken, async (req: any, res) => {
       })),
     };
     const exisConversation = await db.conversation.findMany({
-      where: query
+      where: query,
     })
     if(exisConversation.length > 0) {
       return res.status(200).json({
@@ -64,24 +64,24 @@ router.post('/messages', verifyToken, async (req: any, res) => {
   }
 })
 
-// router.post('/send-messages', verifyToken, async (req: any, res) => {
-//   const senderId = req.userId;
-//   const { conversationId, text } = req.body;
-//   try {
-//     // Kiểm tra xem cuộc trò chuyện có tồn tại không
-//     const conversation = await getConversation(conversationId);
+router.post('/send-messages', verifyToken, async (req: any, res) => {
+  const senderId = req.userId;
+  const { conversationId, text } = req.body;
+  try {
+    // Kiểm tra xem cuộc trò chuyện có tồn tại không
+    const conversation = await getConversation(conversationId);
 
-//     if (!conversation) {
-//       throw new Error(`Conversation with id ${conversationId} not found.`);
-//     }
+    if (!conversation) {
+      throw new Error(`Conversation with id ${conversationId} not found.`);
+    }
 
-//     // Tạo tin nhắn mới và liên kết nó với cuộc trò chuyện
-//     const message = await sendMessage({text, senderId, conversationId})
+    // Tạo tin nhắn mới và liên kết nó với cuộc trò chuyện
+    const message = await sendMessage({text, senderId, conversationId})
 
-//     return res.status(200).json(message);
-//   } catch (error: any) {
-//     throw new Error(`Failed to send message: ${error.message}`);
-//   }
-// })
+    return res.status(200).json(message);
+  } catch (error: any) {
+    throw new Error(`Failed to send message: ${error.message}`);
+  }
+})
 
 export default router;
