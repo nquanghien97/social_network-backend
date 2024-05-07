@@ -47,6 +47,47 @@ const io = new Server(httpServer, {
   }
 });
 
+const activeUsers = new Set<number>();
+
+io.on("connection", (socket) => {
+  const id = socket.handshake.query.id as string;
+  socket.join(id);
+
+  activeUsers.add(parseInt(id));
+  io.to(socket.id).emit("online-users", Array.from(activeUsers));
+  socket.broadcast.emit("user-connected", parseInt(id));
+
+  socket.on(
+    "send-message",
+    ({
+      id,
+      authorId,
+      conversationId,
+      text,
+      timeSent,
+    }: {
+      id: number;
+      authorId: number;
+      conversationId: number;
+      text: string;
+      timeSent: Date;
+    }) => {
+      socket.broadcast.emit("receive-message", {
+        id,
+        authorId,
+        conversationId,
+        text,
+        timeSent,
+      });
+    }
+  );
+
+  socket.on("disconnect", () => {
+    activeUsers.delete(parseInt(id));
+    socket.broadcast.emit("user-disconnected", parseInt(id));
+  });
+});
+
 io.on('connection', (socket) => {
   console.log(`User connected ${socket.id}`)
 })

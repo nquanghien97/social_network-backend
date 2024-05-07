@@ -106,5 +106,13 @@ export async function sendMessage(data: Message) {
       authorId: data.senderId,
       conversationId:  data.conversationId,
     },
+    include: {
+      author: {
+        select: {
+          imageUrl: true,
+          fullName: true,
+        }
+      },
+    }
   })
 }
