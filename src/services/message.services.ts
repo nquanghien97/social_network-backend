@@ -37,11 +37,8 @@ async function calculateSkip(conversationId: string, limit: number, offset: numb
     },
   });
   
-  // Tính toán skip
   let skip = totalMessages - (offset * limit);
-  //offset = 2 -> skip = -1
   
-  // Kiểm tra nếu skip là số âm, đặt lại thành 0
   if (skip < 0) {
     skip = 0;
   }
@@ -68,6 +65,13 @@ export async function getConversation(conversationId: string) {
   return await db.conversation.findUnique({
     where: {
       id: conversationId
+    },
+    select: {
+      participants: {
+        select: {
+          userId: true
+        }
+      }
     }
   })
 }

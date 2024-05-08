@@ -1,4 +1,4 @@
-import express from 'express';
+import express, { text } from 'express';
 import * as dotenv from 'dotenv';
 import cors from 'cors';
 
@@ -63,16 +63,18 @@ io.on("connection", (socket) => {
       id,
       authorId,
       conversationId,
+      receiverId,
       text,
       timeSent,
     }: {
       id: number;
       authorId: number;
       conversationId: number;
+      receiverId: string;
       text: string;
       timeSent: Date;
     }) => {
-      socket.broadcast.emit("receive-message", {
+      socket.broadcast.to(receiverId.toString()).emit("receive-message", {
         id,
         authorId,
         conversationId,
@@ -88,9 +90,9 @@ io.on("connection", (socket) => {
   });
 });
 
-io.on('connection', (socket) => {
-  console.log(`User connected ${socket.id}`)
-})
+// io.on('connection', (socket) => {
+//   console.log(`User connected ${socket.id}`)
+// })
 
 
 

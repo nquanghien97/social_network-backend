@@ -62,7 +62,15 @@ router.post('/messages', verifyToken, async (req: any, res) => {
       message: err.message,
     })
   }
-})
+});
+
+router.post('/messages-userId', verifyToken, async (req: any, res) => {
+  const userId = req.userId
+  const { conversationId } = req.body;
+  const conversation = await getConversation(conversationId);
+  const listUserIdOfConversation = conversation?.participants.filter((user) => user.userId !== userId)
+  return res.status(200).json(listUserIdOfConversation)
+});
 
 router.post('/send-messages', verifyToken, async (req: any, res) => {
   const senderId = req.userId;
