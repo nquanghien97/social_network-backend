@@ -62,24 +62,31 @@ io.on("connection", (socket) => {
     ({
       id,
       authorId,
-      conversationId,
       receiverId,
+      conversationId,
       text,
       timeSent,
+      author,
     }: {
-      id: number;
-      authorId: number;
-      conversationId: number;
+      id: string;
+      authorId: string;
+      conversationId: string;
       receiverId: string;
       text: string;
+      author: {
+        imageUrl: string;
+        id: string;
+      },
       timeSent: Date;
     }) => {
-      socket.broadcast.to(receiverId.toString()).emit("receive-message", {
+      socket.broadcast.to(receiverId).emit("receive-message", {
         id,
         authorId,
+        receiverId,
         conversationId,
         text,
         timeSent,
+        author,
       });
     }
   );

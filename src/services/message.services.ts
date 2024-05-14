@@ -113,6 +113,7 @@ export async function sendMessage(data: Message) {
     include: {
       author: {
         select: {
+          id: true,
           imageUrl: true,
           fullName: true,
         }
