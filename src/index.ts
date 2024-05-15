@@ -38,6 +38,7 @@ app.use('/api/', messageRouter)
 app.get('/', (req, res) => {
   res.status(200).json({
     message: 'Welcome to Social-network Project!!',
+    DB_URL: process.env.POSTGRES_PRISMA_URL
   });
 });
 
