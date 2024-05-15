@@ -21,7 +21,7 @@ async function createUserByEmailAndPassword(user: createUserDTO) {
   });
 }
 
-async function findUserById(id: number) {
+async function findUserById(id: string) {
   return await db.user.findUnique({
     where: {
       id,
@@ -34,7 +34,7 @@ async function findUserById(id: number) {
   });
 }
 
-const updateUserById = async (id: number, data: updateUserDTO) => {
+const updateUserById = async (id: string, data: updateUserDTO) => {
   const updateUser = await db.user.update({
     where: {
       id,
@@ -44,7 +44,7 @@ const updateUserById = async (id: number, data: updateUserDTO) => {
   return updateUser;
 }
 
-function updatePassword(userId: number, password: string) {
+function updatePassword(userId: string, password: string) {
   return db.user.update({
     where: {
       id: userId,
@@ -55,7 +55,7 @@ function updatePassword(userId: number, password: string) {
   })
 }
 
-const updateAvatarUser = async (id: number, data: updateAvatarDTO) => {
+const updateAvatarUser = async (id: string, data: updateAvatarDTO) => {
   return await db.user.update({
     where: {
       id,
@@ -64,7 +64,7 @@ const updateAvatarUser = async (id: number, data: updateAvatarDTO) => {
   })
 }
 
-async function getUser(id: number) {
+async function getUser(id: string) {
   return await db.user.findMany({
     where: {
       id,
@@ -79,7 +79,7 @@ async function getUser(id: number) {
   });
 }
 
-async function getSuggestionUser(userId: number, offset: number, limit: number) {
+async function getSuggestionUser(userId: string, offset: number, limit: number) {
   const data = await getAllFriends(userId);
   const listFriends = data.map(({friend}) => friend.id);
   return await db.user.findMany({

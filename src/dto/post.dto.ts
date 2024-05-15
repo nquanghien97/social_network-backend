@@ -1,5 +1,5 @@
 export interface createPostDTO {
-  userId: number;
+  userId: string;
   title?: string;
   text?: string;
   imageUrl?: string;

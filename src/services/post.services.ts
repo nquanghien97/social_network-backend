@@ -46,7 +46,7 @@ export async function createPost(newPost: createPostDTO) {
   })
 }
 
-export async function getAllPost(userId: number) {
+export async function getAllPost(userId: string) {
   return await db.post.findMany({
     where: {
       userId
@@ -91,12 +91,12 @@ export async function getAllPost(userId: number) {
       }
     },
     orderBy: {
-      updatedAt: 'desc'
+      updatedAt: 'desc',
     },
   })
 }
 
-export async function getNewFeed(userIds: number[], offset: number, limit: number) {
+export async function getNewFeed(userIds: string[], offset: number, limit: number) {
   return await db.post.findMany({
     take: limit,
     skip: (offset * limit) - limit,
@@ -150,7 +150,7 @@ export async function getNewFeed(userIds: number[], offset: number, limit: numbe
   })
 };
 
-export async function deletePost(postId: string, userId: number) {
+export async function deletePost(postId: string, userId: string) {
   return await db.post.delete({
     where: {
       id: postId,
@@ -225,13 +225,14 @@ export async function getPostById(postId: string) {
   })
 }
 
-export async function getImagesOfPost(userId: number) {
+export async function getImagesOfPost(userId: string) {
   return await db.post.findMany({
     where: {
       userId
     },
     select: {
       imageUrl: true,
+      id: true,
     }
   })
 }

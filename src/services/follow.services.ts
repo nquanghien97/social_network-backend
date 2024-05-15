@@ -7,7 +7,7 @@ export async function followUser(data: FollowDTO) {
   })
 }
 
-export async function findFollowById({ followerId, followingId }: {followerId: number, followingId: number}) {
+export async function findFollowById({ followerId, followingId }: {followerId: string, followingId: string}) {
   return await db.follows.findFirst({
     where: {
       followerId,
@@ -19,7 +19,7 @@ export async function findFollowById({ followerId, followingId }: {followerId: n
   })
 }
 
-export async function deleteFollowById({ followerId, followingId }: {followerId: number, followingId: number}) {
+export async function deleteFollowById({ followerId, followingId }: {followerId: string, followingId: string}) {
   return await db.follows.deleteMany({
     where: {
       followerId,
@@ -28,7 +28,7 @@ export async function deleteFollowById({ followerId, followingId }: {followerId:
   })
 }
 
-export async function getFollowerById(userId: number) {
+export async function getFollowerById(userId: string) {
   return await db.follows.findMany({
     where: {
       followerId: userId
@@ -46,7 +46,7 @@ export async function getFollowerById(userId: number) {
   })
 }
 
-export async function getFollowingById(userId: number) {
+export async function getFollowingById(userId: string) {
   return await db.follows.findMany({
     where: {
       followingId: userId
