@@ -1,5 +1,5 @@
-import { createPostDTO } from '../dto/post.dto';
-import db from '../utils/db';
+import { createPostDTO } from '../dto/post.dto.js';
+import db from '../utils/db.js';
 
 export async function createPost(newPost: createPostDTO) {
   return await db.post.create({

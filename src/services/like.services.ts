@@ -1,4 +1,4 @@
-import db from "../utils/db";
+import db from "../utils/db.js";
 
 export async function likePost(userId: string, postId: string) {
   return await db.like.create({

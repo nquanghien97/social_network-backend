@@ -1,9 +1,9 @@
+import db from '../utils/db.js';
 interface Message {
   text: string   
   senderId: string    
   conversationId: string  
 }
-import db from '../utils/db';
 
 export async function getMessages(conversationId: string, limit: number, offset: number){
   return await db.conversation.findUnique({

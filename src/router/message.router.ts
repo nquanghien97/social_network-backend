@@ -1,7 +1,7 @@
 import { Router } from 'express';
-import { createConversation, getConversation, getMessages, sendMessage } from '../services/message.services';
-import verifyToken from '../middleware/auth';
-import db from '../utils/db';
+import { createConversation, getConversation, getMessages, sendMessage } from '../services/message.services.js';
+import verifyToken from '../middleware/auth.js';
+import db from '../utils/db.js';
 
 const router = Router();
 
@@ -68,7 +68,7 @@ router.post('/messages-userId', verifyToken, async (req: any, res) => {
   const userId = req.userId
   const { conversationId } = req.body;
   const conversation = await getConversation(conversationId);
-  const listUserIdOfConversation = conversation?.participants.filter((user) => user.userId !== userId)
+  const listUserIdOfConversation = conversation?.participants.filter((user: any) => user.userId !== userId)
   return res.status(200).json(listUserIdOfConversation)
 });
 

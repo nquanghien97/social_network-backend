@@ -1,5 +1,5 @@
-import db from '../utils/db';
-import { hashToken } from '../utils/hashToken';
+import db from '../utils/db.js';
+import { hashToken } from '../utils/hashToken.js';
 
 // used when we create a refresh token.
 function addRefreshTokenToWhitelist({ jti, refreshToken, userId }: { jti: string, refreshToken: string, userId: string }) {

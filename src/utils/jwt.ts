@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import UserEntity from "../entities/user.entity";
+import UserEntity from "../entities/user.entity.js";
 
 function generateAccessToken(user: UserEntity) {
   return jwt.sign({ userId: user.id }, process.env.ACCESS_TOKEN_PRIVATE_KEY as string, {

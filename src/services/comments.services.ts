@@ -1,4 +1,4 @@
-import db from '../utils/db';
+import db from '../utils/db.js';
 
 export async function addComments(userId: string, postId: string, content?: string, parentId?: string) {
   return await db.comments.create({

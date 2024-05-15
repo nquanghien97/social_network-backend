@@ -5,15 +5,15 @@ import cors from 'cors';
 import { createServer } from 'http';
 import { Server } from 'socket.io';
 
-import authRouter from './router/auth.router';
-import userRouter from './router/user.router';
-import postRouter from './router/post.router';
-import friendRouter from './router/friend.router';
-import likeRouter from './router/like.router';
-import followRouter from './router/follow.router';
-import commentsRouter from './router/comments.router';
-import passwordRouter from './router/password.router';
-import messageRouter from './router/message.router';
+import authRouter from './router/auth.router.js';
+import userRouter from './router/user.router.js';
+import postRouter from './router/post.router.js';
+import friendRouter from './router/friend.router.js';
+import likeRouter from './router/like.router.js';
+import followRouter from './router/follow.router.js';
+import commentsRouter from './router/comments.router.js';
+import passwordRouter from './router/password.router.js';
+import messageRouter from './router/message.router.js';
 
 const port = 5000;
 const app = express();

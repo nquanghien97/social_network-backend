@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
-import verifyToken from '../middleware/auth';
-import { deleteLikePost, getLikePost, likePost } from '../services/like.services';
+import verifyToken from '../middleware/auth.js';
+import { deleteLikePost, getLikePost, likePost } from '../services/like.services.js';
 
 const router = Router();
 

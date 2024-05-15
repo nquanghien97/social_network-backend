@@ -2,17 +2,17 @@ import { Router } from 'express';
 import { v4 as uuidv4 } from 'uuid';
 import bcrypt from 'bcrypt';
 import jwt, { JwtPayload } from 'jsonwebtoken';
-import { generateTokens } from '../utils/jwt';
+import { generateTokens } from '../utils/jwt.js';
 import {
   addRefreshTokenToWhitelist,
   deleteRefreshToken, findRefreshTokenById
-} from '../services/auth.services';
+} from '../services/auth.services.js';
 import {
   findUserByEmail,
   createUserByEmailAndPassword,
   findUserById,
-} from '../services/user.services';
-import { hashToken } from '../utils/hashToken';
+} from '../services/user.services.js';
+import { hashToken } from '../utils/hashToken.js';
 
 const router = Router();
 

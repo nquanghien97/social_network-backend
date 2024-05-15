@@ -1,8 +1,8 @@
 import { Router, Response } from 'express';
-import { findUserById, getSuggestionUser, searchUsers, updateAvatarUser, updatePassword, updateUserById } from '../services/user.services';
-import verifyToken from '../middleware/auth';
-import multer from '../utils/multer';
-import cloudinary from '../utils/cloudinary';
+import { findUserById, getSuggestionUser, searchUsers, updateAvatarUser, updatePassword, updateUserById } from '../services/user.services.js';
+import verifyToken from '../middleware/auth.js';
+import multer from '../utils/multer.js';
+import cloudinary from '../utils/cloudinary.js';
 
 const router = Router();
 

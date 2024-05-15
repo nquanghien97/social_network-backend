@@ -1,9 +1,9 @@
 import { Router, Response } from 'express';
-import verifyToken from '../middleware/auth';
-import { createPost, deletePost, getAllPost, getImagesOfPost, getNewFeed, getPostById } from '../services/post.services';
-import cloudinary from '../utils/cloudinary';
-import { createPostDTO } from '../dto/post.dto';
-import multer from '../utils/multer';
+import verifyToken from '../middleware/auth.js';
+import { createPost, deletePost, getAllPost, getImagesOfPost, getNewFeed, getPostById } from '../services/post.services.js';
+import cloudinary from '../utils/cloudinary.js';
+import { createPostDTO } from '../dto/post.dto.js';
+import multer from '../utils/multer.js';
 
 const router = Router();
 

@@ -1,5 +1,5 @@
-import { AddNewFriendDTO } from "../dto/friend.dto";
-import db from "../utils/db";
+import { AddNewFriendDTO } from "../dto/friend.dto.js";
+import db from "../utils/db.js";
 
 
 export async function getAllFriends(userId: string) {

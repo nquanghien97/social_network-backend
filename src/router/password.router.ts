@@ -1,10 +1,10 @@
 import { Router } from "express";
-import { findUserByEmail, findUserById, updatePassword } from "../services/user.services";
-import { createEmailToken, deleteEmailToken, findEmailToken } from "../services/auth.services";
-import { v4 as uuidv4 } from 'uuid';
-import sendEmail from "../utils/email";
 import bcrypt from 'bcrypt';
-import verifyToken from "../middleware/auth";
+import { findUserByEmail, findUserById, updatePassword } from "../services/user.services.js";
+import { createEmailToken, deleteEmailToken, findEmailToken } from "../services/auth.services.js";
+import { v4 as uuidv4 } from 'uuid';
+import sendEmail from "../utils/email.js";
+import verifyToken from "../middleware/auth.js";
 
 const router = Router();
 

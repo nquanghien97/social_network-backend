@@ -1,9 +1,9 @@
-import { createUserDTO, updateAvatarDTO, updateUserDTO } from "../dto/user.dto";
-import UserEntity from "../entities/user.entity";
+import { createUserDTO, updateAvatarDTO, updateUserDTO } from "../dto/user.dto.js";
+import UserEntity from "../entities/user.entity.js";
 
 import bcrypt from 'bcrypt';
-import db from '../utils/db';
-import { getAllFriends } from "./friend.services";
+import db from '../utils/db.js';
+import { getAllFriends } from "./friend.services.js";
 
 const findUserByEmail = async function (email: string): Promise<UserEntity | null> {
   const user = await db.user.findUnique({
@@ -81,7 +81,7 @@ async function getUser(id: string) {
 
 async function getSuggestionUser(userId: string, offset: number, limit: number) {
   const data = await getAllFriends(userId);
-  const listFriends = data.map(({friend}) => friend.id);
+  const listFriends = data.map(({friend}: { friend: any }) => friend.id);
   return await db.user.findMany({
     take: limit,
     skip: (offset * limit) - limit,

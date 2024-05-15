@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import verifyToken from '../middleware/auth';
-import { addComments, deleteComment, getComments } from '../services/comments.services';
+import verifyToken from '../middleware/auth.js';
+import { addComments, deleteComment, getComments } from '../services/comments.services.js';
 
 const router = Router();
 
@@ -41,7 +41,7 @@ router.post('/get-comments', verifyToken, async (req: any, res) => {
   try {
     const comments = await getComments(postId);
     
-    const result = comments.filter((comment) => {
+    const result = comments.filter((comment: any) => {
       return comment.parentId === null
     })
     return res.status(200).json({

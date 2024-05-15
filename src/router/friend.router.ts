@@ -1,6 +1,6 @@
 import { Router } from "express";
-import verifyToken from "../middleware/auth";
-import { addNewFriend, deleteFriendById, findFriendById, getAllFriends, getFriendsOfuser } from "../services/friend.services";
+import verifyToken from "../middleware/auth.js";
+import { addNewFriend, deleteFriendById, findFriendById, getAllFriends, getFriendsOfuser } from "../services/friend.services.js";
 
 const router = Router();
 
@@ -40,7 +40,7 @@ router.post('/friend', verifyToken, async (req: any, res) => {
   
   try {
     const data = await getAllFriends(userId);
-    const listFriends = data.map(({friend}) => friend);
+    const listFriends = data.map(({friend} : { friend: any}) => friend);
 
     return res.status(200).json({
       success: true,
@@ -60,7 +60,7 @@ router.post('/friend-user', verifyToken, async (req: any, res) => {
   const { friendId } = req.body;
   try {
     const data = await getFriendsOfuser(friendId);
-    const listFriends = data.map(({user}) => user);
+    const listFriends = data.map(({user} : { user: any }) => user);
 
     return res.status(200).json({
       success: true,
@@ -142,7 +142,7 @@ router.get('/id-friend', verifyToken, async (req: any, res) => {
   }
   try {
     const data = await getAllFriends(userId);
-    const listFriendsId = data.map(({friend}) => friend.id);
+    const listFriendsId = data.map(({friend} : { friend: any }) => friend.id);
 
     return res.status(200).json({
       success: true,

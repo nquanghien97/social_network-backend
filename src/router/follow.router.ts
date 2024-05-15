@@ -1,6 +1,6 @@
 import { Router } from 'express';
-import verifyToken from '../middleware/auth';
-import { deleteFollowById, findFollowById, followUser, getFollowerById, getFollowingById } from '../services/follow.services';
+import verifyToken from '../middleware/auth.js';
+import { deleteFollowById, findFollowById, followUser, getFollowerById, getFollowingById } from '../services/follow.services.js';
 
 const router = Router();
 
@@ -33,7 +33,7 @@ router.post('/get-follower', verifyToken, async (req: any, res) => {
   const userId = req.userId;
   try {
     const response = await getFollowingById(userId)
-    const following = response.map(({follower}) => follower)
+    const following = response.map(({follower}: { follower: any}) => follower)
     return res.status(200).json({
       following,
       success: true,
@@ -51,7 +51,7 @@ router.post('/get-following', verifyToken, async (req: any, res) => {
   const userId = req.userId;
   try {
     const response = await getFollowerById(userId)
-    const follower = response.map(({following}) => following)
+    const follower = response.map(({following} : { following: any}) => following)
     return res.status(200).json({
       follower,
       success: true,

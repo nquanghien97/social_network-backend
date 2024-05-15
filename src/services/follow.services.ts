@@ -1,5 +1,5 @@
-import { FollowDTO } from '../dto/follow.dto';
-import db from '../utils/db';
+import { FollowDTO } from '../dto/follow.dto.js';
+import db from '../utils/db.js';
 
 export async function followUser(data: FollowDTO) {
   return await db.follows.create({
