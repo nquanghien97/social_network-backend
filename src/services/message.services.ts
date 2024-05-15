@@ -69,7 +69,13 @@ export async function getConversation(conversationId: string) {
     select: {
       participants: {
         select: {
-          userId: true
+          user: {
+            select: {
+              id: true,
+              fullName: true,
+              imageUrl: true
+            }
+          }
         }
       }
     }
