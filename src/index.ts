@@ -79,7 +79,7 @@ io.on("connection", (socket) => {
       },
       timeSent: Date;
     }) => {
-      socket.broadcast.to(receiverId).emit("receive-message", {
+      socket.broadcast.to(conversationId).emit("receive-message", {
         id,
         authorId,
         receiverId,
