@@ -1,5 +1,5 @@
 import { Router } from 'express';
-import { createConversation, getConversation, getMessages, sendMessage } from '../services/message.services.js';
+import { createConversation, getConversation, getListConversationsByUserId, getMessages, sendMessage } from '../services/message.services.js';
 import verifyToken from '../middleware/auth.js';
 import db from '../utils/db.js';
 
@@ -91,5 +91,21 @@ router.post('/send-messages', verifyToken, async (req: any, res) => {
     throw new Error(`Failed to send message: ${error.message}`);
   }
 })
+
+router.post('/list-conversations', verifyToken, async (req: any, res) => {
+  const userId = req.userId;
+  try {
+    const listConversations = await getListConversationsByUserId(userId);
+    return res.status(200).json({
+      success: true,
+      listConversations,
+    })
+  } catch (err: any) {
+      return res.status(400).json({
+        success: false,
+        message: err.message,
+      })
+  }
+});
 
 export default router;

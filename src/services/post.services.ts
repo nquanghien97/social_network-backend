@@ -1,4 +1,5 @@
 import { createPostDTO } from '../dto/post.dto.js';
+import { UpdatePostEntity } from '../entities/post.entity.js';
 import db from '../utils/db.js';
 
 export async function createPost(newPost: createPostDTO) {
@@ -92,6 +93,73 @@ export async function getAllPost(userId: string) {
     },
     orderBy: {
       updatedAt: 'desc',
+    },
+  })
+}
+
+export async function updatePost(postId: string, postData: UpdatePostEntity) {
+  return await db.post.update({
+    where: {
+      id: postId,
+    },
+    data: postData,
+    include: {
+      author: true,
+      like: true,
+      _count: {
+        select: {
+          like: true,
+          comments: true,
+        },
+      },
+      comments: {
+        include: {
+          author: {
+            select: {
+              id: true,
+              fullName: true,
+              imageUrl: true,
+            }
+          },
+          children: {
+            include: {
+              author: {
+                select: {
+                  id: true,
+                  fullName: true,
+                  imageUrl: true,
+                }
+              },
+              children: {
+                include: {
+                  author: {
+                    select: {
+                      id: true,
+                      fullName: true,
+                      imageUrl: true,
+                    }
+                  },
+                  children: {
+                    include: {
+                      author: {
+                        select: {
+                          id: true,
+                          fullName: true,
+                          imageUrl: true,
+                        }
+                      },
+                      children: true
+                    }
+                  }
+                }
+              },
+            },
+            orderBy: {
+              createdAt: 'desc',
+            },
+          },
+        }
+      }
     },
   })
 }

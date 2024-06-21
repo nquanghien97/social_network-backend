@@ -1,6 +1,6 @@
 import { Router, Response } from 'express';
 import verifyToken from '../middleware/auth.js';
-import { createPost, deletePost, getAllPost, getImagesOfPost, getNewFeed, getPostById } from '../services/post.services.js';
+import { createPost, deletePost, getAllPost, getImagesOfPost, getNewFeed, getPostById, updatePost } from '../services/post.services.js';
 import cloudinary from '../utils/cloudinary.js';
 import { createPostDTO } from '../dto/post.dto.js';
 import multer from '../utils/multer.js';
@@ -89,6 +89,58 @@ router.get('/post/:postId', verifyToken, async (req: any, res) => {
       success: true,
       message: "Get post successfully",
       post: postById
+    })
+  } catch (err: any) {
+    return res.status(400).json({
+      success: false,
+      message: "Get Post Failed",
+      error: err.message
+    })
+  }
+});
+
+router.post('/update-post/:postId', multer.single('image'), verifyToken, async (req: any, res) => {
+  const { postId } = req.params;
+  const { title, text } = req.body;
+  let result;
+  try {
+    const postById = await getPostById(postId)
+    if(!postById) return res.status(400).json({
+      success: false,
+      message: "Post not found"
+    });
+    if(!req.file) {
+      const postUpdated = await updatePost(postId, { title, text });
+      return res.status(200).json({
+        success: true,
+        message: "Update post successfully",
+        post: postUpdated
+      })
+    }
+    if(req.file && postById.imageUrl) {
+      await cloudinary.v2.uploader.destroy(postById.cloudinary_id as string);
+      result = await cloudinary.v2.uploader.upload(req.file.path, {
+        folder: "social-network/post",
+        use_filename: true,
+      })
+    }
+    if(req.file && !postById.imageUrl) {
+      result = await cloudinary.v2.uploader.upload(req.file.path, {
+        folder: "social-network/post",
+        use_filename: true,
+      })
+      console.log(result)
+    }
+    const newPost = await updatePost(postId, {
+      title,
+      text,
+      imageUrl: result?.secure_url || postById.imageUrl as string,
+      cloudinary_id: result?.public_id || postById.cloudinary_id as string,
+    })
+    return res.status(200).json({
+      success: true,
+      message: "Update post successfully",
+      post: newPost
     })
   } catch (err: any) {
     return res.status(400).json({

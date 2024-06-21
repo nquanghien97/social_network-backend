@@ -17,7 +17,7 @@ export async function getMessages(conversationId: string, limit: number, offset:
         take: limit,
         skip: (offset * limit) - limit,
         orderBy: {
-          createdAt: "desc",
+          createdAt: 'desc'
         },
         include: {
           author: {
@@ -126,6 +126,17 @@ export async function sendMessage(data: Message) {
           fullName: true,
         }
       },
+    }
+  })
+}
+
+export async function getListConversationsByUserId(userId: string) {
+  return await db.conversationUser.findMany({
+    where: {
+      userId
+    },
+    select: {
+      conversationId: true,
     }
   })
 }
