@@ -12,10 +12,12 @@ export async function getMessages(conversationId: string, limit: number, offset:
     },
     include: {
       messages: {
-        take: await calculateLimit(conversationId, limit, offset),
-        skip: await calculateSkip(conversationId, limit, offset),
+        // take: await calculateLimit(conversationId, limit, offset),
+        // skip: await calculateSkip(conversationId, limit, offset),
+        take: limit,
+        skip: (offset * limit) - limit,
         orderBy: {
-          createdAt: 'asc',
+          createdAt: "desc",
         },
         include: {
           author: {
