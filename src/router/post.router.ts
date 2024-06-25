@@ -55,7 +55,7 @@ router.post('/post', multer.single('image'), verifyToken, async (req: any, res: 
 
 //get post
 router.post('/posts', verifyToken, async (req: any, res: Response) => {
-  const { userId } = req.userId;
+  const userId = req.userId;
   const { limit, offset } = req.body;
   if(!userId) return res.status(401).json({
     success: false,
