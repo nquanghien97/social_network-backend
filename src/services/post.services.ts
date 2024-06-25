@@ -1,5 +1,5 @@
 import { createPostDTO } from '../dto/post.dto.js';
-import { UpdatePostEntity } from '../entities/post.entity.js';
+import PostEntity, { UpdatePostEntity } from '../entities/post.entity.js';
 import db from '../utils/db.js';
 
 export async function createPost(newPost: createPostDTO) {
@@ -47,8 +47,10 @@ export async function createPost(newPost: createPostDTO) {
   })
 }
 
-export async function getAllPost(userId: string) {
+export async function getAllPost(userId: string, limit: number, offset: number) {
   return await db.post.findMany({
+    take: limit,
+    skip: (offset * limit) - limit,
     where: {
       userId
     },

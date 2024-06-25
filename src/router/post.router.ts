@@ -55,13 +55,14 @@ router.post('/post', multer.single('image'), verifyToken, async (req: any, res: 
 
 //get post
 router.post('/posts', verifyToken, async (req: any, res: Response) => {
-  const { userId } = req.body
+  const { userId } = req.userId;
+  const { limit, offset } = req.body;
   if(!userId) return res.status(401).json({
     success: false,
     message: "Unauthorized"
   })
   try {
-    const data = await getAllPost(userId);
+    const data = await getAllPost(userId, limit, offset);
     return res.status(200).json({
       success: true,
       message: "Get post successfully",
@@ -171,6 +172,7 @@ router.post('/feed', verifyToken, async (req: any, res: Response) =>{
   }
 });
 
+//delete post
 router.delete('/post', verifyToken, async (req: any, res: Response) => {
   const userId = req.userId;
   const { postId } = req.body;
